@@ -27,12 +27,9 @@
                             <form method="POST" action="{{ route('setting.update.name',$site_name->id) }}">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <label>Chagne Site Name</label>
-                                        <input type="text" placeholder="Enter New Site Name" name="site_name" class="form-control">
-                                    </div>
-                                    <div class="col-md-4">
-                                       <h4>{{ $site_name->value }}</h4>
+                                    <div class="col-md-8">
+                                        <label>Change Site Name</label>
+                                        <input type="text" value="{{ $site_name->value }}" placeholder="Enter New Site Name" name="site_name" class="form-control">
                                     </div>
                                     <div class="col-md-4">
                                         <br/>

@@ -46,7 +46,7 @@
                                             <td>{{ $item->borrower_type }}</td>
                                             <td>{{ $item->type }}</td>
                                             <td>
-                                                <a href="{{ route('view.b.approve',$item->id) }}" class="btn btn-sm btn-primary">View</a>
+                                                <a href="{{ route('view_requested.b.approve',$item->id) }}" class="btn btn-sm btn-primary">View</a>
                                                 <a href="{{ route('delete.requested.b.approve',$item->id) }}" class="btn btn-sm btn-danger">Delete</a>
                                             </td>
                                         </tr>

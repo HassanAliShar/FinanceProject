@@ -59,10 +59,12 @@
                                         <select name="role_id" class="form-control select2">
                                             <option>--Select Role--</option>
                                             @foreach ($role as $row)
-                                                @if ($data->role_id == $row->id)
-                                                    <option selected value="{{ $row->id }}">{{ $row->name }}</option>
-                                                @else
-                                                    <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                                @if ($row->id != 1)
+                                                    @if ($data->role_id == $row->id)
+                                                        <option selected value="{{ $row->id }}">{{ $row->name }}</option>
+                                                    @else
+                                                        <option value="{{ $row->id }}">{{ $row->name }}</option>
+                                                    @endif
                                                 @endif
                                             @endforeach
                                         </select>

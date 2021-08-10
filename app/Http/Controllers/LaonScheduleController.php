@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SchduelExport;
 use App\Imports\SchduleImport;
 use App\Models\LoanSchduleApprovel;
 use App\Models\LoanSchedule;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,11 +34,11 @@ class LaonScheduleController extends Controller
         $schdule->expected_payment_date = $request->expected_payment_date;
         if($schdule->save()){
             DB::commit();
-            return redirect()->back()->with('success','Loan Schdule Added Successfully');
+            return redirect()->back()->with('success','Loan Schedule Added Successfully');
         }
         else{
             DB::rollBack();
-            return redirect()->back()->with('error','Loan Schdule Not Added');
+            return redirect()->back()->with('error','Loan Schedule Not Added');
         }
     }
 
@@ -52,11 +55,11 @@ class LaonScheduleController extends Controller
         $schdule->expected_payment_date = $request->expected_payment_date;
         if($schdule->save()){
             DB::commit();
-            return redirect()->back()->with('success','Loan Schdule Update Successfully');
+            return redirect()->back()->with('success','Loan Schedule Update Successfully');
         }
         else{
             DB::rollBack();
-            return redirect()->back()->with('error','Loan Schdule Not Update');
+            return redirect()->back()->with('error','Loan Schedule Not Update');
         }
     }
 
@@ -80,11 +83,11 @@ class LaonScheduleController extends Controller
                 $request->status = "Approved";
                 $request->save();
                 DB::commit();
-                return redirect()->back()->with('success','Loan Schdule Added Requted Approved');
+                return redirect()->back()->with('success','Loan Schedule Added Requted Approved');
             }
             else{
                 DB::rollBack();
-                return redirect()->back()->with('error','Loan Schdule Request Not Approved');
+                return redirect()->back()->with('error','Loan Schedule Request Not Approved');
             }
         }
         else if($request->type =="Update"){
@@ -98,11 +101,11 @@ class LaonScheduleController extends Controller
                 $request->status = "Approved";
                 $request->save();
                 DB::commit();
-                return redirect()->back()->with('success','Loan Schdule Update Request Approved');
+                return redirect()->back()->with('success','Loan Schedule Update Request Approved');
             }
             else{
                 DB::rollBack();
-                return redirect()->back()->with('error','Loan Schdule Update Not Approved');
+                return redirect()->back()->with('error','Loan Schedule Update Not Approved');
             }
         }
         else{
@@ -111,11 +114,11 @@ class LaonScheduleController extends Controller
                 $request->status = "Approved";
                 $request->save();
                 DB::commit();
-                return redirect()->back()->with('success','Loan Schdule Deleted Request Approved');
+                return redirect()->back()->with('success','Loan Schedule Deleted Request Approved');
             }
             else{
                 DB::rollBack();
-                return redirect()->back()->with('error','Loan Schdule Request Not Approved');
+                return redirect()->back()->with('error','Loan Schedule Request Not Approved');
             }
         }
     }
@@ -135,10 +138,10 @@ class LaonScheduleController extends Controller
     public function destory($id){
         $schdule = LoanSchedule::find($id);
         if($schdule->delete()){
-            return redirect()->back()->with('success','Loan Schdule Deleted Successfully');
+            return redirect()->back()->with('success','Loan Schedule Deleted Successfully');
         }
         else{
-            return redirect()->back()->with('error','Loan Schdule Not Deleted');
+            return redirect()->back()->with('error','Loan Schedule Not Deleted');
         }
     }
 
@@ -162,5 +165,21 @@ class LaonScheduleController extends Controller
             return redirect()->back()->with('error',$ex->getMessage());
         }
 
+    }
+
+    public function schdule_paid($id){
+       $schdule = LoanSchedule::find($id);
+       $schdule->status = 1;
+       if($schdule->save()){
+           return redirect()->back()->with('success','Paid Successfully');
+       }
+       else{
+           return redirect()->back()->with('error','Schdule Not Paid');
+       }
+    }
+
+    public function export_schdule(){
+
+        return Excel::download(new SchduelExport, 'Schedule.xlsx');
     }
 }

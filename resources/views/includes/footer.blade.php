@@ -26,6 +26,13 @@
         // initialize datatable
         $('#dt-basic-example').dataTable(
         {
+            // "columnDefs": [
+            //     {
+            //         "targets": [ 2,3 ],
+            //         "visible": false,
+            //     },
+
+            // ],
             orderCellsTop: true,
             responsive: true,
             lengthChange: true,
@@ -41,24 +48,88 @@
                     titleAttr: 'Col visibility',
                     className: 'mr-sm-3'
                 },*/
+                {
+                    extend: 'colvis',
+                    text: 'Column Visibility',
+                    titleAttr: 'Col visibility',
+                    className: 'btn-outline-default'
+                },
                 // {
-                //     extend: 'colvis',
-                //     text: 'Column Visibility',
-                //     titleAttr: 'Col visibility',
-                //     className: 'btn-outline-default'
+                //     extend: 'pdfHtml5',
+                //     text: 'PDF',
+                //     titleAttr: 'Generate PDF',
+                //     className: 'btn-outline-danger btn-sm mr-1'
                 // },
+                // {
+                //     extend: 'excelHtml5',
+                //     text: 'Excel',
+                //     titleAttr: 'Generate Excel',
+                //     className: 'btn-outline-success btn-sm mr-1',
+                //     exportOptions: {
+                //     columns: [ 0, 1, 3, 4, ]
+                //     }
+
+                // },
+                // {
+                //     extend: 'csvHtml5',
+                //     text: 'CSV',
+                //     titleAttr: 'Generate CSV',
+                //     className: 'btn-outline-primary btn-sm mr-1'
+                // },
+                // {
+                //     extend: 'print',
+                //     text: 'Print',
+                //     titleAttr: 'Print Table',
+                //     className: 'btn-outline-primary btn-sm'
+                // }
+            ]
+        });
+        $('#dt-basic-example2').dataTable(
+        {
+            // "columnDefs": [
+            //     {
+            //         "targets": [ 2,3 ],
+            //         "visible": false,
+            //     },
+
+            // ],
+            orderCellsTop: true,
+            responsive: true,
+            lengthChange: true,
+            processing: true,
+            order: [[ 1, "desc" ]],
+            dom:"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            buttons: [
+                /*{
+                    extend:    'colvis',
+                    text:      'Column Visibility',
+                    titleAttr: 'Col visibility',
+                    className: 'mr-sm-3'
+                },*/
                 {
-                    extend: 'pdfHtml5',
-                    text: 'PDF',
-                    titleAttr: 'Generate PDF',
-                    className: 'btn-outline-danger btn-sm mr-1'
+                    extend: 'colvis',
+                    text: 'Column Visibility',
+                    titleAttr: 'Col visibility',
+                    className: 'btn-outline-default'
                 },
-                {
-                    extend: 'excelHtml5',
-                    text: 'Excel',
-                    titleAttr: 'Generate Excel',
-                    className: 'btn-outline-success btn-sm mr-1'
-                },
+                // {
+                //     extend: 'pdfHtml5',
+                //     text: 'PDF',
+                //     titleAttr: 'Generate PDF',
+                //     className: 'btn-outline-danger btn-sm mr-1'
+                // },
+                // {
+                //     extend: 'excelHtml5',
+                //     text: 'Excel',
+                //     titleAttr: 'Generate Excel',
+                //     className: 'btn-outline-success btn-sm mr-1',
+                //     exportOptions: {
+                //     columns: [ 0, 1, 3, 4, ]
+                //     }
+
+                // },
                 // {
                 //     extend: 'csvHtml5',
                 //     text: 'CSV',

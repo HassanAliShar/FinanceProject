@@ -25,15 +25,15 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <div class="panel-tag">
-                            Import <code>Loan</code> Excel Sheeet.
+                            Import <code>Loan</code> Excel Sheet.
                             <hr/>
                             <form action="{{ route('import.loan') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="borrower_id" class="">Select Borrower</label>
                                         <select class="form-control" name="borrower_id">
-                                                <option>--Select Laon--</option>
+                                                <option>--Select Loan--</option>
                                             @if (count($borrower) != 0)
                                                 @foreach ($borrower as $row)
                                                     <option value="{{ $row->id }}">{{ $row->name }}</option>
@@ -41,16 +41,22 @@
                                             @endif
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="excel_file" class="">Select Sheet</label>
                                         <input id="excel_file" type="file" name="excel_file" class="form-control" required autocomplete="excel_file" autofocus>
                                     </div>
-                                    <div class="col-md-4 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <button type="submit" class="btn btn-primary">
                                             Import
                                         </button>
                                         <a download class="btn btn-success mt-1 ml-auto" href="{{ asset('excel_formates/loan.xlsx') }}">
-                                            Sheet Exampe Format
+                                            Sheet Example Format
+                                        </a>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a download class="btn btn-success mt-4 ml-auto" href="{{ route('export.loan') }}">
+                                            Eport Data
                                         </a>
                                     </div>
                                 </div>
@@ -67,8 +73,7 @@
                                         <th>End Date</th>
                                         <th>Interest Type</th>
                                         <th>Initial Amount</th>
-                                        <th>Payment</th>
-                                        <th>Schdule</th>
+                                        <th>Payment/Schedules</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -79,12 +84,11 @@
                                             <td>{{ $item->lender_name }}</td>
                                             <td>{{ $item->legal_loan_id }}</td>
                                             <td>{{ $item->loan_type }}</td>
-                                            <td>{{ $item->start_date }}</td>
-                                            <td>{{ $item->end_date }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->start_date )) }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->end_date)) }}</td>
                                             <td>{{ $item->interest_type }}</td>
-                                            <td>{{ $item->initial_amount }}</td>
-                                            <td><a href="{{ route('manage.payment',$item->id) }}" class="btn btn-sm btn-primary">Payment</a></td>
-                                            <td><a href="{{ route('manage.schedule',$item->id) }}" class="btn btn-sm btn-success">Schdule</a></td>
+                                            <td>{{ number_format( $item->initial_amount, 2, ',', '.')  }}</td>
+                                            <td><a href="{{ route('manage.schedule',$item->id) }}" class="btn btn-sm btn-primary">Payment/Schedules</a></td>
                                             <td>
                                                 <a href="{{ route('show.loan',$item->id) }}" class="btn btn-sm btn-primary">View</a>
                                                 <a href="{{ route('edit.loan',$item->id) }}" class="btn btn-sm btn-info">Edit</a>
@@ -104,8 +108,7 @@
                                         <th>End Date</th>
                                         <th>Interest Type</th>
                                         <th>Initial Amount</th>
-                                        <th>Payment</th>
-                                        <th>Schdule</th>
+                                        <th>Payment/Schedules</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>

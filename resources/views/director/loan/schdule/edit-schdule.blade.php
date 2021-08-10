@@ -4,7 +4,7 @@
 <div class="container">
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-table'></i> Edit Loan Schdule
+            <i class='subheader-icon fal fa-table'></i> Edit Loan Schedule
         </h1>
     </div>
     <div class="row">
@@ -12,7 +12,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Loan Schdule <span class="fw-300"><i>info</i></span>
+                        Loan Schedule <span class="fw-300"><i>info</i></span>
                     </h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -64,7 +64,7 @@
                                 <div class="form-group row mb-0">
                                     <div class="col-md-6 offset-md-4">
                                         <button type="submit" class="btn btn-primary">
-                                            Update Schdule
+                                            Update Schedule
                                         </button>
                                     </div>
                                 </div>

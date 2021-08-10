@@ -35,6 +35,39 @@ class BorrowerApprovelController extends Controller
         $borrower->occupation = $request->occupation;
         $borrower->line_of_business = $request->line_of_business;
         $borrower->bank_account = $request->bank_account;
+        $borrower->internal_number = $request->internal_number;
+        $borrower->place_of_birth = $request->place_of_birth;
+        $borrower->last_education = $request->last_education;
+        $borrower->mother_maiden = $request->mother_maiden;
+        $borrower->surveyor = $request->surveyor;
+        $borrower->partner_spouse = $request->partner_spouse;
+        $borrower->partner_spouse_identity_number = $request->partner_spouse_identity_number;
+        $borrower->partner_spouse_contact_number = $request->partner_spouse_contact_number;
+        $borrower->partner_spouse_domicile_address = $request->partner_spouse_domicile_address;
+        $borrower->marriage_status = $request->marriage_status;
+        $borrower->family_card_number = $request->family_card_number;
+        $borrower->home_number = $request->home_number;
+        $borrower->mobile_number = $request->mobile_number;
+        $borrower->office_number = $request->office_number;
+        $borrower->domicile_status = $request->domicile_status;
+        $borrower->email = $request->email;
+        $borrower->identity_address = $request->identity_address;
+        $borrower->domicile_address = $request->domicile_address;
+        $borrower->office_address = $request->office_address;
+        $borrower->line_of_business = $request->line_of_business;
+        $borrower->business_experience = $request->business_experience;
+        $borrower->business_capital = $request->business_capital;
+        $borrower->annual_income = $request->annual_income;
+        $borrower->other_income = $request->other_income;
+        $borrower->joint_income = $request->joint_income;
+        $borrower->total_income = $request->total_income;
+        $borrower->living_expenses = $request->living_expenses;
+        $borrower->business_expenses = $request->business_expenses;
+        $borrower->other_expenses = $request->other_expenses;
+        $borrower->other_loan = $request->other_loan;
+        $borrower->net_cash_flow = $request->net_cash_flow;
+        $borrower->total_assets = $request->total_assets;
+        $borrower->other_lenders = $request->other_lenders;
         $borrower->type = 'Insert';
         $borrower->user_id = Auth::user()->id;
         $borrower->status = 'Pending';
@@ -128,6 +161,39 @@ class BorrowerApprovelController extends Controller
         $borrower->occupation = $request->occupation;
         $borrower->line_of_business = $request->line_of_business;
         $borrower->bank_account = $request->bank_account;
+        $borrower->internal_number = $request->internal_number;
+        $borrower->place_of_birth = $request->place_of_birth;
+        $borrower->last_education = $request->last_education;
+        $borrower->mother_maiden = $request->mother_maiden;
+        $borrower->surveyor = $request->surveyor;
+        $borrower->partner_spouse = $request->partner_spouse;
+        $borrower->partner_spouse_identity_number = $request->partner_spouse_identity_number;
+        $borrower->partner_spouse_contact_number = $request->partner_spouse_contact_number;
+        $borrower->partner_spouse_domicile_address = $request->partner_spouse_domicile_address;
+        $borrower->marriage_status = $request->marriage_status;
+        $borrower->family_card_number = $request->family_card_number;
+        $borrower->home_number = $request->home_number;
+        $borrower->mobile_number = $request->mobile_number;
+        $borrower->office_number = $request->office_number;
+        $borrower->domicile_status = $request->domicile_status;
+        $borrower->email = $request->email;
+        $borrower->identity_address = $request->identity_address;
+        $borrower->domicile_address = $request->domicile_address;
+        $borrower->office_address = $request->office_address;
+        $borrower->line_of_business = $request->line_of_business;
+        $borrower->business_experience = $request->business_experience;
+        $borrower->business_capital = $request->business_capital;
+        $borrower->annual_income = $request->annual_income;
+        $borrower->other_income = $request->other_income;
+        $borrower->joint_income = $request->joint_income;
+        $borrower->total_income = $request->total_income;
+        $borrower->living_expenses = $request->living_expenses;
+        $borrower->business_expenses = $request->business_expenses;
+        $borrower->other_expenses = $request->other_expenses;
+        $borrower->other_loan = $request->other_loan;
+        $borrower->net_cash_flow = $request->net_cash_flow;
+        $borrower->total_assets = $request->total_assets;
+        $borrower->other_lenders = $request->other_lenders;
         $borrower->type = 'Update';
         $borrower->user_id = Auth::user()->id;
         $borrower->status = 'Pending';
@@ -171,6 +237,9 @@ class BorrowerApprovelController extends Controller
 
     public function view_borrower_approve($id){
         return view('manager.Borrower.view',['data'=>Borrower::find($id)]);
+    }
+    public function view_requested_borrower($id){
+        return view('manager.Borrower.view_requtested_borrower',['data'=>BorrowerApproval::find($id)]);
     }
     public function requested_borrower_approve(){
         return view('manager.Borrower.index',['data'=>BorrowerApproval::where('status','Pending')->where('user_id',Auth::user()->id)->get()]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LoanExport;
 use App\Imports\LoanImport;
 use App\Imports\UsersImport;
 use App\Models\Loan;
@@ -12,6 +13,7 @@ use App\Models\LoanPayment;
 use Illuminate\Support\Str;
 use App\Models\LoanApprovel;
 use App\Models\LoanSchedule;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -53,7 +55,10 @@ class LoanController extends Controller
         $loan->borrower_id = $request->borrower_id;
         $loan->lender_name = $request->lender_name;
         $loan->legal_loan_id = $request->legal_loan_id;
+        $loan->loan_internal_number = $request->loan_internal_number;
         $loan->loan_type = $request->loan_type;
+        $loan->loan_status = $request->loan_status;
+        $loan->loan_reason = $request->loan_reason;
         $loan->start_date = $request->start_date;
         $loan->end_date = $request->end_date;
         $loan->interest_type = $request->interest_type;
@@ -61,7 +66,15 @@ class LoanController extends Controller
         $loan->initial_amount = $request->initial_amount;
         $loan->tenor = $request->tenor;
         $loan->payment_period = $request->payment_period;
+        $loan->administration_charges = $request->administration_charges;
+        $loan->government_charges = $request->government_charges;
+        $loan->agreement_charges = $request->agreement_charges;
         $loan->provision_charges = $request->provision_charges;
+        $loan->skmht_charges = $request->skmht_charges;
+        $loan->apht_charges = $request->apht_charges;
+        $loan->fiduciary_charges = $request->fiduciary_charges;
+        $loan->certificate_charges = $request->certificate_charges;
+        $loan->other_charges = $request->other_charges;
         $loan->insurance_charges = $request->insurance_charges;
         $loan->notary_charges = $request->notary_charges;
         $loan->collateral = $request->collateral;
@@ -112,6 +125,11 @@ class LoanController extends Controller
         return view('director.loan.view',['data'=>Loan::with('fields')->with('files')->find($id),'borrower'=>Borrower::all()]);
     }
 
+    public function view_requested_loan($id)
+    {
+        return view('director.loan.view_requested_loan',['data'=>LoanApprovel::with('fields')->with('files')->find($id),'borrower'=>Borrower::all()]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -132,63 +150,96 @@ class LoanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        DB::beginTransaction();
-        $loan = Loan::find($id);
-        $loan->lender_name = $request->lender_name;
-        $loan->legal_loan_id = $request->legal_loan_id;
-        $loan->loan_type = $request->loan_type;
-        $loan->start_date = $request->start_date;
-        $loan->end_date = $request->end_date;
-        $loan->interest_type = $request->interest_type;
-        $loan->interest_rate = $request->interest_rate;
-        $loan->initial_amount = $request->initial_amount;
-        $loan->tenor = $request->tenor;
-        $loan->payment_period = $request->payment_period;
-        $loan->provision_charges = $request->provision_charges;
-        $loan->insurance_charges = $request->insurance_charges;
-        $loan->notary_charges = $request->notary_charges;
-        $loan->collateral = $request->collateral;
-        $loan->bank_account = $request->bank_account;
+        try{
+            DB::beginTransaction();
+            $loan = Loan::find($id);
+            $loan->borrower_id = $request->borrower_id;
+            $loan->lender_name = $request->lender_name;
+            $loan->legal_loan_id = $request->legal_loan_id;
+            $loan->loan_internal_number = $request->loan_internal_number;
+            $loan->loan_type = $request->loan_type;
+            $loan->loan_status = $request->loan_status;
+            $loan->loan_reason = $request->loan_reason;
+            $loan->start_date = $request->start_date;
+            $loan->end_date = $request->end_date;
+            $loan->interest_type = $request->interest_type;
+            $loan->interest_rate = $request->interest_rate;
+            $loan->initial_amount = $request->initial_amount;
+            $loan->tenor = $request->tenor;
+            $loan->payment_period = $request->payment_period;
+            $loan->administration_charges = $request->administration_charges;
+            $loan->government_charges = $request->government_charges;
+            $loan->agreement_charges = $request->agreement_charges;
+            $loan->provision_charges = $request->provision_charges;
+            $loan->skmht_charges = $request->skmht_charges;
+            $loan->apht_charges = $request->apht_charges;
+            $loan->fiduciary_charges = $request->fiduciary_charges;
+            $loan->certificate_charges = $request->certificate_charges;
+            $loan->other_charges = $request->other_charges;
+            $loan->insurance_charges = $request->insurance_charges;
+            $loan->notary_charges = $request->notary_charges;
+            $loan->collateral = $request->collateral;
+            $loan->bank_account = $request->bank_account;
 
-        if($loan->save()){
-            $loan->fields->each(function($field) {
-                $field->delete();
-            });
 
-            if($request->field_name != null){
-                for($i = 0; $i<count($request->field_name); $i++){
-                    $fields = new LoanField();
-                    $fields->name = $request->field_name[$i];
-                    $fields->value = $request->field_value[$i];
-                    if(!$loan->fields()->save($fields)){
-                        DB::rollback();
-                        return redirect()->back()->with('error','Loan Not Added');
+            if($loan->save()){
+                $loan->fields->each(function($field) {
+                    $field->delete();
+                });
+
+                if($request->field_name != null){
+                    for($i = 0; $i<count($request->field_name); $i++){
+                        $fields = new LoanField();
+                        $fields->name = $request->field_name[$i];
+                        $fields->value = $request->field_value[$i];
+                        if(!$loan->fields()->save($fields)){
+                            DB::rollback();
+                            return redirect()->back()->with('error','Loan Not Added');
+                        }
                     }
                 }
+                $loan->files->each(function($files) use($request) {
+                    if(!in_array($files->value,$request->file_status))
+                        $files->delete();
+                });
+                if($request->file_value != null){
+                    // for($v = 0; $v<count($request->file_name); $v++){
+                    //     $files = new BorrowerFile();
+                    //     $files->name = $request->file_name[$v];
+                    //     $fileName[$v] = Str::random(30).'.'.$request->file_value[$v]->extension();
+                    //     $request->file_value[$v]->move(public_path('BorrowerFiles'), $fileName[$v]);
+                    //     $files->value = $fileName[$v];
+                    //     if(!$borrower->files()->save($files)){
+                    //         DB::rollback();
+                    //         return redirect()->back()->with('error','Borrower File Not Updated');
+                    //     }
+                    // }
+
+                    foreach ($request->file_value as $v => $value) {
+                        $files = LoanFile::where('value',$value)->first();
+                        if($files == null)
+                            $files = new LoanFile();
+                        $v = (int)$v;
+                        $files->name = $request->file_name[$v];
+                        $fileName[$v] = Str::random(30).'.'.$request->file_value[$v]->extension();
+                        $request->file_value[$v]->move(public_path('LoanFiles'), $fileName[$v]);
+                        $files->value = $fileName[$v];
+                        if(!$loan->files()->save($files)){
+                            DB::rollback();
+                            return redirect()->back()->with('error','Borrower File Not Updated');
+                        }
+                    }
+                }
+                DB::commit();
+                return redirect()->back()->with('success','Laon Updated Successfully');
             }
-            // $loan->files->each(function($files) {
-            //     $files->delete();
-            // });
-            // if($request->file_name != null){
-            //     for($v = 0; $v<count($request->file_name); $v++){
-            //         echo $request->file_value;
-            //         $files = new LoanFile();
-            //         $files->name = $request->file_name[$v];
-            //         $fileName[$v] = Str::random(30).'.'.$request->file_value[$v]->extension();
-            //         $request->file_value[$v]->move(public_path('LoanFiles'), $fileName[$v]);
-            //         $files->value = $fileName[$v];
-            //         if(!$loan->files()->save($files)){
-            //             DB::rollback();
-            //             return redirect()->back()->with('error','Loan File Not Updated');
-            //         }
-            //     }
-            // }
-            DB::commit();
-            return redirect()->back()->with('success','Laon Updated Successfully');
+            else{
+                DB::rollBack();
+                return redirect()->back()->with('error','Loan Not Updated');
+            }
         }
-        else{
-            DB::rollBack();
-            return redirect()->back()->with('error','Loan Not Updated');
+        catch(Exception $ex){
+            return redirect()->back()->with('error',$ex->getMessage());
         }
     }
 
@@ -214,133 +265,160 @@ class LoanController extends Controller
     }
 
     public function approve_loan($id){
-        DB::beginTransaction();
-        $request = LoanApprovel::find($id);
-        if($request->type == "Insert"){
-            $loan = new Loan();
-            $loan->borrower_id = $request->borrower_id;
-            $loan->lender_name = $request->lender_name;
-            $loan->legal_loan_id = $request->legal_loan_id;
-            $loan->loan_type = $request->loan_type;
-            $loan->start_date = $request->start_date;
-            $loan->end_date = $request->end_date;
-            $loan->interest_type = $request->interest_type;
-            $loan->interest_rate = $request->interest_rate;
-            $loan->initial_amount = $request->initial_amount;
-            $loan->tenor = $request->tenor;
-            $loan->payment_period = $request->payment_period;
-            $loan->provision_charges = $request->provision_charges;
-            $loan->insurance_charges = $request->insurance_charges;
-            $loan->notary_charges = $request->notary_charges;
-            $loan->collateral = $request->collateral;
-            $loan->bank_account = $request->bank_account;
-
-            if($loan->save()){
-                if($request->fields != null){
-                    foreach($request->fields as $row){
-                        $fields = new LoanField();
-                        $fields->name = $row->name;
-                        $fields->value = $row->value;
-                        if(!$loan->fields()->save($fields)){
-                            DB::rollback();
-                            return redirect()->back()->with('error','Borrower Not Added');
-                        }
-                    }
-                }
-                if($request->files != null){
-                    foreach($request->files as $file_row){
-                        $files = new LoanFile();
-                        $files->name = $file_row->name;
-                        $files->value = $file_row->value;
-                        if(!$loan->files()->save($files)){
-                            DB::rollback();
-                            return redirect()->back()->with('error','Borrower Not Added');
-                        }
-                    }
-                }
-                $request->status = "Approved";
-                $request->save();
-                DB::commit();
-                return redirect()->back()->with('success','Loan Requested Approved Successfully');
-            }
-            else{
-                DB::rollBack();
-                return redirect()->back()->with('error','Loan Requested Not Approved');
-            }
-        }
-        else if($request->type =="Updated"){
+        try{
             DB::beginTransaction();
-            $loan = Loan::find($request->loan_id);
-            $loan->lender_name = $request->lender_name;
-            $loan->legal_loan_id = $request->legal_loan_id;
-            $loan->loan_type = $request->loan_type;
-            $loan->start_date = $request->start_date;
-            $loan->end_date = $request->end_date;
-            $loan->interest_type = $request->interest_type;
-            $loan->interest_rate = $request->interest_rate;
-            $loan->initial_amount = $request->initial_amount;
-            $loan->tenor = $request->tenor;
-            $loan->payment_period = $request->payment_period;
-            $loan->provision_charges = $request->provision_charges;
-            $loan->insurance_charges = $request->insurance_charges;
-            $loan->notary_charges = $request->notary_charges;
-            $loan->collateral = $request->collateral;
-            $loan->bank_account = $request->bank_account;
+            $request = LoanApprovel::find($id);
+            if($request->type == "Insert"){
+                $loan = new Loan();
+                $loan->borrower_id = $request->borrower_id;
+                $loan->lender_name = $request->lender_name;
+                $loan->legal_loan_id = $request->legal_loan_id;
+                $loan->loan_internal_number = $request->loan_internal_number;
+                $loan->loan_type = $request->loan_type;
+                $loan->loan_status = $request->loan_status;
+                $loan->loan_reason = $request->loan_reason;
+                $loan->start_date = $request->start_date;
+                $loan->end_date = $request->end_date;
+                $loan->interest_type = $request->interest_type;
+                $loan->interest_rate = $request->interest_rate;
+                $loan->initial_amount = $request->initial_amount;
+                $loan->tenor = $request->tenor;
+                $loan->payment_period = $request->payment_period;
+                $loan->administration_charges = $request->administration_charges;
+                $loan->government_charges = $request->government_charges;
+                $loan->agreement_charges = $request->agreement_charges;
+                $loan->provision_charges = $request->provision_charges;
+                $loan->skmht_charges = $request->skmht_charges;
+                $loan->apht_charges = $request->apht_charges;
+                $loan->fiduciary_charges = $request->fiduciary_charges;
+                $loan->certificate_charges = $request->certificate_charges;
+                $loan->other_charges = $request->other_charges;
+                $loan->insurance_charges = $request->insurance_charges;
+                $loan->notary_charges = $request->notary_charges;
+                $loan->collateral = $request->collateral;
+                $loan->bank_account = $request->bank_account;
 
-            if($loan->save()){
-                $loan->fields->each(function($field) {
-                    $field->delete();
-                });
-
-                if($request->fields != null){
-                    foreach($request->fields as $row){
-                        $fields = new LoanField();
-                        $fields->name = $row->name;
-                        $fields->value = $row->value;
-                        if(!$loan->fields()->save($fields)){
-                            DB::rollback();
-                            return redirect()->back()->with('error','Borrower Not Updated');
+                if($loan->save()){
+                    if($request->fields != null){
+                        foreach($request->fields as $row){
+                            $fields = new LoanField();
+                            $fields->name = $row->name;
+                            $fields->value = $row->value;
+                            if(!$loan->fields()->save($fields)){
+                                DB::rollback();
+                                return redirect()->back()->with('error','Borrower Not Added');
+                            }
                         }
                     }
-                }
-                $loan->files->each(function($files) {
-                    $files->delete();
-                });
-                if($request->files != null){
-                    foreach($request->files as $file_row){
-                        $files = new LoanFile();
-                        $files->name = $file_row->name;
-                        $files->value = $file_row->value;
-                        if(!$loan->files()->save($files)){
-                            DB::rollback();
-                            return redirect()->back()->with('error','Borrower Not Added');
+                    if($request->files != null){
+                        foreach($request->files as $file_row){
+                            $files = new LoanFile();
+                            $files->name = $file_row->name;
+                            $files->value = $file_row->value;
+                            if(!$loan->files()->save($files)){
+                                DB::rollback();
+                                return redirect()->back()->with('error','Borrower Not Added');
+                            }
                         }
                     }
+                    $request->status = "Approved";
+                    $request->save();
+                    DB::commit();
+                    return redirect()->back()->with('success','Loan Requested Approved Successfully');
                 }
-                $request->status = "Approved";
-                $request->save();
-                DB::commit();
-                return redirect()->back()->with('success','Laon Updated Rqueested Approved Successfully');
+                else{
+                    DB::rollBack();
+                    return redirect()->back()->with('error','Loan Requested Not Approved');
+                }
+            }
+            else if($request->type =="Update"){
+                DB::beginTransaction();
+                $loan = Loan::find($request->loan_id);
+                $loan->borrower_id = $request->borrower_id;
+                $loan->lender_name = $request->lender_name;
+                $loan->legal_loan_id = $request->legal_loan_id;
+                $loan->loan_internal_number = $request->loan_internal_number;
+                $loan->loan_type = $request->loan_type;
+                $loan->loan_status = $request->loan_status;
+                $loan->loan_reason = $request->loan_reason;
+                $loan->start_date = $request->start_date;
+                $loan->end_date = $request->end_date;
+                $loan->interest_type = $request->interest_type;
+                $loan->interest_rate = $request->interest_rate;
+                $loan->initial_amount = $request->initial_amount;
+                $loan->tenor = $request->tenor;
+                $loan->payment_period = $request->payment_period;
+                $loan->administration_charges = $request->administration_charges;
+                $loan->government_charges = $request->government_charges;
+                $loan->agreement_charges = $request->agreement_charges;
+                $loan->provision_charges = $request->provision_charges;
+                $loan->skmht_charges = $request->skmht_charges;
+                $loan->apht_charges = $request->apht_charges;
+                $loan->fiduciary_charges = $request->fiduciary_charges;
+                $loan->certificate_charges = $request->certificate_charges;
+                $loan->other_charges = $request->other_charges;
+                $loan->insurance_charges = $request->insurance_charges;
+                $loan->notary_charges = $request->notary_charges;
+                $loan->collateral = $request->collateral;
+                $loan->bank_account = $request->bank_account;
+
+                if($loan->save()){
+                    $loan->fields->each(function($field) {
+                        $field->delete();
+                    });
+
+                    if($request->fields != null){
+                        foreach($request->fields as $row){
+                            $fields = new LoanField();
+                            $fields->name = $row->name;
+                            $fields->value = $row->value;
+                            if(!$loan->fields()->save($fields)){
+                                DB::rollback();
+                                return redirect()->back()->with('error','Borrower Not Updated');
+                            }
+                        }
+                    }
+                    $loan->files->each(function($files) {
+                        $files->delete();
+                    });
+                    if($request->files != null){
+                        foreach($request->files as $file_row){
+                            $files = new LoanFile();
+                            $files->name = $file_row->name;
+                            $files->value = $file_row->value;
+                            if(!$loan->files()->save($files)){
+                                DB::rollback();
+                                return redirect()->back()->with('error','Borrower Not Added');
+                            }
+                        }
+                    }
+                    $request->status = "Approved";
+                    $request->save();
+                    DB::commit();
+                    return redirect()->back()->with('success','Laon Updated Rqueested Approved Successfully');
+                }
+                else{
+                    DB::rollBack();
+                    return redirect()->back()->with('error','Loan Updated Reqeust Not Approved');
+                }
             }
             else{
-                DB::rollBack();
-                return redirect()->back()->with('error','Loan Updated Reqeust Not Approved');
-            }
-        }
-        else{
 
-            $loan = Loan::find($request->loan_id);
+                $loan = Loan::find($request->loan_id);
 
-            if($loan->delete()){
-                $request->status = "Approved";
-                $request->save();
-                DB::commit();
-                return redirect()->back()->with('success','Laon Deleted Request Approved');
+                if($loan->delete()){
+                    $request->status = "Approved";
+                    $request->save();
+                    DB::commit();
+                    return redirect()->back()->with('success','Laon Deleted Request Approved');
+                }
+                else{
+                    DB::rollBack();
+                    return redirect()->back()->with('error','Laon Delete Request Not Approved');
+                }
             }
-            else{
-                DB::rollBack();
-                return redirect()->back()->with('error','Laon Delete Request Not Approved');
-            }
+        }catch(Exception $ex){
+            return redirect()->back()->with('error',$ex->getMessage());
         }
 
     }
@@ -358,7 +436,10 @@ class LoanController extends Controller
 
     public function schedule($id)
     {
-        return view('director.loan.schdule.manage_schdule',['data'=>LoanSchedule::where('loan_id',$id)->get(),'id'=>$id, 'loan'=> Loan::all()]);
+        $loan_payment = Loan::find($id)->initial_amount;
+        $schedule = LoanSchedule::where('loan_id',$id)->where('status',1)->sum('principal_payment');
+        $outstanding_balance = $loan_payment - $schedule;
+        return view('director.loan.schdule.manage_schdule',['data'=>LoanSchedule::where('loan_id',$id)->get(),'id'=>$id, 'loan'=> Loan::all(),'data_payment'=>LoanPayment::where('loan_id',$id)->get(),'id'=>$id,'outstanding_balance'=>$outstanding_balance,'schdule'=>$schedule,'loan_payment'=>$loan_payment]);
     }
 
     public function payments($id)
@@ -385,4 +466,10 @@ class LoanController extends Controller
         }
 
     }
+
+    public function export_loan()
+    {
+        return Excel::download(new LoanExport, 'users.xlsx');
+    }
+
 }

@@ -3,7 +3,7 @@
 <div class="container">
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-table'></i> Dashboard
+            <i class='subheader-icon fal fa-home'></i> Dashboard
         </h1>
     </div>
     <div class="row">
@@ -12,7 +12,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Late <span class="fw-300"><i>Payment Borrowers</i></span>
+                        Late <span class="fw-300"><i>Payment Schedules</i></span>
                     </h2>
                 </div>
                 <div class="panel-container show">
@@ -20,14 +20,27 @@
                         <table class="table table-bordered m-0">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Username</th>
+
+                                    <th>Principal Payment</th>
+                                    <th>Interest Payment</th>
+                                    <th>Expected Payment</th>
+                                    <th>Expected Payment Date</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($late_payment as $item)
+                                    <tr>
+                                        <td>{{number_format( $item->principal_payment, 2, ',', '.') }}</td>
+                                        <td>{{ number_format( $item->interest_payment , 2, ',', '.') }}</td>
+                                        <td>{{ number_format( $item->expected_payment , 2, ',', '.') }}</td>
+                                        <td>{{ date('d-m-Y', strtotime( $item->expected_payment_date )) }}</td>
+                                        <td>
+                                            {!! $item->getStatus() !!}
+                                        </td>
+                                    </tr>
 
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -41,6 +54,11 @@
                     <h2>
                        Latest <span class="fw-300"><i>Message</i></span>
                     </h2>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <div>{{ getMessage() }}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,7 +96,7 @@
         var events = [];
         $({!! json_encode($data) !!}).each(function(i,v){
                     events.push({
-                        title: 'Schdule',
+                        title: 'schdule',
                         start: v.expected_payment_date,
                         className: "bg-primary border-primary text-white"
                     });

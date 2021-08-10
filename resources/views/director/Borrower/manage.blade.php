@@ -25,12 +25,12 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <div class="panel-tag">
-                            Import <code>Borrower</code> Excel Sheeet.
+                            Import <code>Borrower</code> Excel Sheet.
                             <hr/>
                             <form action="{{ route('import.borrower') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="excel_file">Select Borrower Sheet</label>
                                         <input id="excel_file" type="file" name="excel_file" class="form-control" required autocomplete="excel_file" autofocus>
                                     </div>
@@ -41,7 +41,12 @@
                                     </div>
                                     <div class="col-md-3">
                                         <a download class="btn btn-success mt-4" href="{{ asset('excel_formates/borrowers.xlsx') }}">
-                                           Sheet Exampe Format
+                                           Sheet Example Format
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a class="btn btn-success mt-4" href="{{ route('export.borrower') }}">
+                                           Export Data
                                         </a>
                                     </div>
                                 </div>

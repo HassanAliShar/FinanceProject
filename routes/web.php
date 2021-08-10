@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Imports\UsersImport;
 use App\Models\LoanSchedule;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Maatwebsite\Excel\Excel;
@@ -32,7 +33,8 @@ Route::get('/home', "HomeController@index")->name('home');
 Route::middleware(['auth'])->group(function () {
     Route::middleware(['director'])->group(function(){
         Route::get('/admin_dashboard',function(){
-            return view('director.dashboard',['data'=>LoanSchedule::all()]);
+            $today = Carbon::now();
+            return view('director.dashboard',['data'=>LoanSchedule::all(),'late_payment'=>LoanSchedule::where('expected_payment_date','<',$today)->get()]);
         })->name('admin.dashboard');
         Route::post('/import_user','LoanController@import_user')->name('import.user');
         // directore routes for staff
@@ -57,6 +59,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/accept/{id}','BorrowerController@accept_borrower')->name('accept.borrower');
             Route::get('/reject/{id}', 'BorrowerController@reject_borrower')->name('reject.borrower');
             Route::post('/import', 'BorrowerController@import_borrower')->name('import.borrower');
+            Route::get('/export', 'BorrowerController@export_borrower')->name('export.borrower');
+            Route::get('/view_requested/{id}','BorrowerController@view_requested_borrower')->name('view_requested.borrower');
         });
 
         // director routes for managers
@@ -82,6 +86,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/approve_loan/{id}','LoanController@approve_loan')->name('approve.loan');
             Route::get('/reject_loan/{id}','LoanController@reject_loan')->name('reject.loan');
             Route::post('/import_loan','LoanController@import_loan')->name('import.loan');
+            Route::get('/export_loan', 'LoanController@export_loan')->name('export.loan');
+            Route::get('/view_requested/{id}','LoanController@view_requested_loan')->name('view_requested.loan');
 
             Route::get('/schedule/{loan}', 'LoanController@schedule')->name('manage.schedule');
             Route::get('/add-schdule/{loan}','LaonScheduleController@create')->name('add.schdule');
@@ -94,6 +100,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/approve/{id}','LaonScheduleController@approve_schdule')->name('approve.schdule');
             Route::get('/reject/{id}','LaonScheduleController@reject_schdule')->name('reject.schdule');
             Route::post('/import_schdule','LaonScheduleController@import_schdule')->name('import.schdule');
+            Route::get('/paid/{id}','LaonScheduleController@schdule_paid')->name('paid.schdule');
+            Route::get('/export_schdule','LaonScheduleController@export_schdule')->name('export.schdule');
          });
 
          // director route of laon payments
@@ -109,6 +117,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/approve/{id}','LaonPaymentController@approve_request')->name('approve.payment');
             Route::get('/reject/{id}','LaonPaymentController@reject_request')->name('reject.payment');
             Route::post('/import','LaonPaymentController@import_payment')->name('import.payment');
+            Route::get('/export', 'LaonPaymentController@export_payment')->name('export.payment');
 
          });
 
@@ -150,6 +159,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/delete/{id}','BorrowerApprovelController@delete_borrower_approve')->name('delete.b.approve');
             Route::get('/requested','BorrowerApprovelController@requested_borrower_approve')->name('requested.b.approve');
             Route::get('/delete_requested/{id}','BorrowerApprovelController@delete_requested')->name('delete.requested.b.approve');
+            Route::get('/view_requested/{id}', 'BorrowerApprovelController@view_requested_borrower')->name('view_requested.b.approve');
         });
         Route::prefix('mg-loan')->group(function(){
             Route::get('/add', 'LoanApprovelController@create')->name('add.mg.loan');
@@ -161,10 +171,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/show/{id}','LoanApprovelController@show_view')->name('show.mg.loan');
             Route::get('/requested','LoanApprovelController@requested_loan')->name('requested.mg.loan');
             Route::get('delete_req/{id}','LoanApprovelController@delete')->name('delete_req.mg.loan');
+            Route::get('/view_requested/{id}','LoanApprovelController@view_requested')->name('view_requested.mg.loan');
         });
 
         Route::prefix('mg-schdule')->group(function (){
-            Route::get('/schedule/{loan}', 'LoanSchduleApprovelController@schedule')->name('manage.mg.schedule');
+            Route::get('/schedule/{loan}', 'LoanSchduleApprovelController@schedule')->name('manage.mg.schdule');
             Route::get('/add-schdule/{loan}','LoanSchduleApprovelController@create')->name('add.mg.schdule');
             Route::post('/store-schdule/{id}', 'LoanSchduleApprovelController@store')->name('store.mg.schdule');
             Route::get('/delete-schdule/{id}','LoanSchduleApprovelController@destory')->name('delete.mg.schdule');
@@ -174,6 +185,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/requested','LoanSchduleApprovelController@requested_schdule')->name('requested.mg.schdule');
             Route::get('/view_requested/{id}','LoanSchduleApprovelController@view_schdule')->name('view_requested.mg.schdule');
             Route::get('/delete_req/{id}','LoanSchduleApprovelController@delete_schdule')->name('delete_requested.mg.schdule');
+
         });
 
         Route::prefix('mg-payment')->group(function(){

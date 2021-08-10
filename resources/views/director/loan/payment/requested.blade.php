@@ -39,9 +39,9 @@
                                     @foreach ($data as $item)
 
                                         <tr>
-                                            <td>{{ $item->payment_amount }}</td>
+                                            <td>{{ number_format( $item->payment_amount, 2, ',', '.') }}</td>
                                             <td>{{ $item->interest_amount }}</td>
-                                            <td>{{ $item->payment_date }}</td>
+                                            <td>{{date('d-m-Y', strtotime( $item->payment_date )) }}</td>
                                             <td>{{ $item->payment_note }}</td>
                                             <td>{{ $item->status }}</td>
                                             <td>{{ $item->type }}</td>

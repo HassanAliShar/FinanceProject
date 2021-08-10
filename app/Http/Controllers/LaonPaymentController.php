@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PaymentExport;
 use App\Imports\PaymentImport;
 use App\Models\LoanPayment;
 use App\Models\LoanPaymentApprovel;
@@ -162,5 +163,10 @@ class LaonPaymentController extends Controller
             return redirect()->back()->with('error',$ex->getMessage());
         }
 
+    }
+
+    public function export_payment(){
+
+        return Excel::download(new PaymentExport, 'Payment.xlsx');
     }
 }

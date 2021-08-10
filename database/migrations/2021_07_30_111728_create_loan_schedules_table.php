@@ -20,6 +20,7 @@ class CreateLoanSchedulesTable extends Migration
             $table->decimal('interest_payment',20,2);
             $table->decimal('expected_payment',20,2);
             $table->date('expected_payment_date');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }

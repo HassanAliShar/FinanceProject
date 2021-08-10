@@ -3,7 +3,7 @@
 <div class="container">
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-table'></i> Manage Loan Sechdule
+            <i class='subheader-icon fal fa-table'></i> Manage Loan Schedule
         </h1>
         <a href="{{ route('add.mg.schdule',$id) }}" class="btn btn-primary waves-effect waves-themed text-white"><i
             class="fal fa-plus-circle"></i> Add Loan Sechdule
@@ -14,7 +14,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Loan Schdule <span class="fw-300"><i>info</i></span>
+                        Loan Schedule <span class="fw-300"><i>info</i></span>
                     </h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -32,7 +32,7 @@
                                         <th>Principal Payment</th>
                                         <th>Interest Payment</th>
                                         <th>Expected Payment</th>
-                                        <th>Expated Payment Date</th>
+                                        <th>Expected Payment Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -40,10 +40,10 @@
                                     @foreach ($data as $item)
 
                                         <tr>
-                                            <td>{{ $item->principal_payment }}</td>
-                                            <td>{{ $item->interest_payment }}</td>
-                                            <td>{{ $item->expected_payment }}</td>
-                                            <td>{{ $item->expected_payment_date }}</td>
+                                            <td>{{number_format( $item->principal_payment, 2, ',', '.') }}</td>
+                                            <td>{{ number_format( $item->interest_payment , 2, ',', '.') }}</td>
+                                            <td>{{ number_format( $item->expected_payment , 2, ',', '.') }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->expected_payment_date )) }}</td>
                                             <td>
                                                 <a href="{{ route('show.schdule',$item->id) }}" class="btn btn-sm btn-primary">View</a>
                                                 <a href="{{ route('edit.mg.schdul',$item->id) }}" class="btn btn-sm btn-info">Edit</a>
@@ -58,7 +58,7 @@
                                         <th>Principal Payment</th>
                                         <th>Interest Payment</th>
                                         <th>Expected Payment</th>
-                                        <th>Expated Payment Date</th>
+                                        <th>Expected Payment Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>

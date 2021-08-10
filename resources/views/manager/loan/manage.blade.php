@@ -36,7 +36,7 @@
                                         <th>Interest Type</th>
                                         <th>Initial Amount</th>
                                         <th>Payment</th>
-                                        <th>Schdule</th>
+                                        <th>Schedule</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -47,12 +47,13 @@
                                             <td>{{ $item->lender_name }}</td>
                                             <td>{{ $item->legal_loan_id }}</td>
                                             <td>{{ $item->loan_type }}</td>
-                                            <td>{{ $item->start_date }}</td>
-                                            <td>{{ $item->end_date }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->start_date )) }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->end_date )) }}</td>
                                             <td>{{ $item->interest_type }}</td>
-                                            <td>{{ $item->initial_amount }}</td>
+                                            {{-- <th>{{  }}</th> --}}
+                                            <td>{{ number_format( $item->initial_amount, 2, ',', '.')  }}</td>
                                             <td><a href="{{ route('manage.mg.payment',$item->id) }}" class="btn btn-sm btn-primary">Payment</a></td>
-                                            <td><a href="{{ route('manage.mg.schedule',$item->id) }}" class="btn btn-sm btn-success">Schdule</a></td>
+                                            <td><a href="{{ route('manage.mg.schdule',$item->id) }}" class="btn btn-sm btn-success">Schedule</a></td>
                                             <td>
                                                 <a href="{{ route('show.mg.loan',$item->id) }}" class="btn btn-sm btn-primary">View</a>
                                                 <a href="{{ route('edit.mg.loan',$item->id) }}" class="btn btn-sm btn-info">Edit</a>
@@ -73,7 +74,7 @@
                                         <th>Interest Type</th>
                                         <th>Initial Amount</th>
                                         <th>Payment</th>
-                                        <th>Schdule</th>
+                                        <th>Schedule</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>

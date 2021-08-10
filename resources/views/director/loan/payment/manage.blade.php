@@ -25,7 +25,7 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <div class="panel-tag">
-                            Import <code>Loan</code> Excel Sheeet.
+                            Import <code>Loan Payment</code> Excel Sheet.
                             <hr/>
                             <form action="{{ route('import.payment') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
@@ -42,7 +42,7 @@
                                         </select>
                                     </div> --}}
                                     <input type="hidden" value="{{ $id }}" name="loan_id"/>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="excel_file" class="">Select Sheet</label>
                                         <input id="excel_file" type="file" name="excel_file" class="form-control" required autocomplete="excel_file" autofocus>
                                     </div>
@@ -53,7 +53,12 @@
                                     </div>
                                     <div class="col-md-3">
                                         <a download class="btn btn-success mt-4" href="{{ asset('excel_formates/loan_payments.xlsx') }}">
-                                           Sheet Exampe Format
+                                           Sheet Example Format
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a class="btn btn-success mt-4" href="{{ route('export.payment') }}">
+                                           Export Data
                                         </a>
                                     </div>
                                 </div>
@@ -75,9 +80,9 @@
                                     @foreach ($data as $item)
 
                                         <tr>
-                                            <th>{{ $item->payment_amount }}</th>
+                                            <th>{{ number_format( $item->payment_amount, 2, ',', '.') }}</th>
                                             <th>{{ $item->interest_amount }}</th>
-                                            <th>{{ $item->payment_date }}</th>
+                                            <th>{{date('d-m-Y', strtotime( $item->payment_date )) }}</th>
                                             <th>{{ $item->payment_note }}</th>
                                             <td>
                                                 <a href="{{ route('show.payment',$item->id) }}" class="btn btn-sm btn-primary">View</a>

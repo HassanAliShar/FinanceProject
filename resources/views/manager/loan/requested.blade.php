@@ -47,14 +47,14 @@
                                             <td>{{ $item->lender_name }}</td>
                                             <td>{{ $item->legal_loan_id }}</td>
                                             <td>{{ $item->loan_type }}</td>
-                                            <td>{{ $item->start_date }}</td>
-                                            <td>{{ $item->end_date }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->start_date )) }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->end_date)) }}</td>
                                             <td>{{ $item->interest_type }}</td>
-                                            <td>{{ $item->initial_amount }}</td>
+                                            <td>{{ number_format( $item->initial_amount, 2, ',', '.')  }}</td>
                                             <td>{{ $item->type }}</td>
                                             <td>{{ $item->status }}</td>
                                             <td>
-                                                <a href="{{ route('show.mg.loan',$item->id) }}" class="btn btn-sm btn-primary">View</a>
+                                                <a href="{{ route('view_requested.mg.loan',$item->id) }}" class="btn btn-sm btn-primary">View</a>
                                                 <a href="{{ route('delete_req.mg.loan',$item->id) }}" class="btn btn-sm btn-danger">Delete</a>
                                             </td>
                                         </tr>

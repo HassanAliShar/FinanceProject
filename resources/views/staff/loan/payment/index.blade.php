@@ -3,7 +3,7 @@
 <div class="container">
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-table'></i> Manage Loan Sechdule
+            <i class='subheader-icon fal fa-table'></i> Manage Loan Schedule
         </h1>
     </div>
     <div class="row">
@@ -11,7 +11,7 @@
             <div id="panel-1" class="panel">
                 <div class="panel-hdr">
                     <h2>
-                        Loan Schdule <span class="fw-300"><i>info</i></span>
+                        Loan Schedule <span class="fw-300"><i>info</i></span>
                     </h2>
                     <div class="panel-toolbar">
                         <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -37,9 +37,9 @@
                                     @foreach ($data as $item)
 
                                         <tr>
-                                            <td>{{ $item->payment_amount }}</td>
+                                            <td>{{ number_format( $item->payment_amount, 2, ',', '.') }}</td>
                                             <td>{{ $item->interest_amount }}</td>
-                                            <td>{{ $item->payment_date }}</td>
+                                            <td>{{date('d-m-Y', strtotime( $item->payment_date )) }}</td>
                                             <td>{{ $item->payment_note }}</td>
                                             <td>
                                                 <a href="{{ route('staff.payment.view',$item->id) }}" class="btn btn-sm btn-primary">View</a>

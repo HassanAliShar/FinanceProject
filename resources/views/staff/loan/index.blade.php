@@ -36,7 +36,7 @@
                                         <th>Interest Type</th>
                                         <th>Initial Amount</th>
                                         <th>Payment</th>
-                                        <th>Schdule</th>
+                                        <th>Schedule</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -47,12 +47,12 @@
                                             <td>{{ $item->lender_name }}</td>
                                             <td>{{ $item->legal_loan_id }}</td>
                                             <td>{{ $item->loan_type }}</td>
-                                            <td>{{ $item->start_date }}</td>
-                                            <td>{{ $item->end_date }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->start_date )) }}</td>
+                                            <td>{{ date('d-m-Y', strtotime( $item->end_date)) }}</td>
                                             <td>{{ $item->interest_type }}</td>
-                                            <td>{{ $item->initial_amount }}</td>
+                                            <td>{{ number_format( $item->initial_amount, 2, ',', '.')  }}</td>
                                             <td><a href="{{ route('staff.payment.manage',$item->id) }}" class="btn btn-sm btn-primary">Payment</a></td>
-                                            <td><a href="{{ route('staff.schdule.manage',$item->id) }}" class="btn btn-sm btn-success">Schdule</a></td>
+                                            <td><a href="{{ route('staff.schdule.manage',$item->id) }}" class="btn btn-sm btn-success">Schedule</a></td>
                                             <td>
                                                 <a href="{{ route('staff.loan.view',$item->id) }}" class="btn btn-sm btn-primary">View</a>
 
@@ -71,7 +71,7 @@
                                         <th>Interest Type</th>
                                         <th>Initial Amount</th>
                                         <th>Payment</th>
-                                        <th>Schdule</th>
+                                        <th>Schedule</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>

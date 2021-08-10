@@ -31,11 +31,11 @@ class LoanSchduleApprovelController extends Controller
         $schdule->user_id = Auth::user()->id;
         if($schdule->save()){
             DB::commit();
-            return redirect()->back()->with('success','Loan Schdule Added Successfully');
+            return redirect()->back()->with('success','Loan Schedule Added Successfully');
         }
         else{
             DB::rollBack();
-            return redirect()->back()->with('error','Loan Schdule Not Added');
+            return redirect()->back()->with('error','Loan Schedule Not Added');
         }
     }
 
@@ -57,11 +57,11 @@ class LoanSchduleApprovelController extends Controller
         $schdule->user_id = Auth::user()->id;
         if($schdule->save()){
             DB::commit();
-            return redirect()->back()->with('success','Loan Schdule Update Request sent');
+            return redirect()->back()->with('success','Loan Schedule Update Request sent');
         }
         else{
             DB::rollBack();
-            return redirect()->back()->with('error','Loan Schdule Update Request Not Sent');
+            return redirect()->back()->with('error','Loan Schedule Update Request Not Sent');
         }
     }
 
@@ -80,11 +80,11 @@ class LoanSchduleApprovelController extends Controller
         $schdule->user_id = Auth::user()->id;
         if($schdule->save()){
             DB::commit();
-            return redirect()->back()->with('success','Loan Schdule Delete Request sent');
+            return redirect()->back()->with('success','Loan Schedule Delete Request sent');
         }
         else{
             DB::rollBack();
-            return redirect()->back()->with('error','Loan Schdule Delete Request Not Sent');
+            return redirect()->back()->with('error','Loan Schedule Delete Request Not Sent');
         }
 
     }
