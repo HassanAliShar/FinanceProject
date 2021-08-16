@@ -20,7 +20,9 @@
                         <table class="table table-bordered m-0">
                             <thead>
                                 <tr>
-
+                                    <th>Borrower Name</th>
+                                    <th>Loan ID</th>
+                                    <th>OutStanding Payment</th>
                                     <th>Principal Payment</th>
                                     <th>Interest Payment</th>
                                     <th>Expected Payment</th>
@@ -31,6 +33,9 @@
                             <tbody>
                                 @foreach ($late_payment as $item)
                                     <tr>
+                                        <td>{{ $item->loan->borrower->name }}</td>
+                                        <td>{{ $item->loan->legal_loan_id }}</td>
+                                        <td>{{ $item->loan->outstanding_payment() }}</td>
                                         <td>{{number_format( $item->principal_payment, 2, ',', '.') }}</td>
                                         <td>{{ number_format( $item->interest_payment , 2, ',', '.') }}</td>
                                         <td>{{ number_format( $item->expected_payment , 2, ',', '.') }}</td>
@@ -47,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-3">
             <!--Table bordered-->
             <div id="panel-2" class="panel">
                 <div class="panel-hdr">
@@ -57,12 +62,14 @@
                 </div>
                 <div class="panel-container show">
                     <div class="panel-content">
-                        <div>{{ getMessage() }}</div>
+                        <div class="row">
+                        <div class="col-md-12" style="overflow: hidden"><p>{!! getMessage() !!}</p></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-9">
             <div id="panel-3" class="panel">
                 <div class="panel-hdr">
                     <h2 class="js-get-date"></h2>
@@ -96,12 +103,13 @@
         var events = [];
         $({!! json_encode($data) !!}).each(function(i,v){
                     events.push({
-                        title: 'schdule',
+                        title: "Loan ID "+v.loan.legal_loan_id+"\rPayment "+v.expected_payment,
                         start: v.expected_payment_date,
-                        className: "bg-primary border-primary text-white"
+                        className: "bg-primary border-primary text-white",
+                        url: "/loan/schedule/"+v.loan_id
                     });
             })
-            console.log(events);
+            // console.log(events);
         var YESTERDAY = todayDate.clone().subtract(1, 'day').format('YYYY-MM-DD');
         var TODAY = todayDate.format('YYYY-MM-DD');
         var TOMORROW = todayDate.clone().add(1, 'day').format('YYYY-MM-DD');

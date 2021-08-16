@@ -59,8 +59,8 @@ class LoanController extends Controller
         $loan->loan_type = $request->loan_type;
         $loan->loan_status = $request->loan_status;
         $loan->loan_reason = $request->loan_reason;
-        $loan->start_date = $request->start_date;
-        $loan->end_date = $request->end_date;
+        $loan->start_date = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
+        $loan->end_date = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
         $loan->interest_type = $request->interest_type;
         $loan->interest_rate = $request->interest_rate;
         $loan->initial_amount = $request->initial_amount;
@@ -160,8 +160,8 @@ class LoanController extends Controller
             $loan->loan_type = $request->loan_type;
             $loan->loan_status = $request->loan_status;
             $loan->loan_reason = $request->loan_reason;
-            $loan->start_date = $request->start_date;
-            $loan->end_date = $request->end_date;
+            $loan->start_date = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
+            $loan->end_date = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
             $loan->interest_type = $request->interest_type;
             $loan->interest_rate = $request->interest_rate;
             $loan->initial_amount = $request->initial_amount;
@@ -332,7 +332,7 @@ class LoanController extends Controller
                 }
             }
             else if($request->type =="Update"){
-                DB::beginTransaction();
+                // DB::beginTransaction();
                 $loan = Loan::find($request->loan_id);
                 $loan->borrower_id = $request->borrower_id;
                 $loan->lender_name = $request->lender_name;
@@ -341,7 +341,7 @@ class LoanController extends Controller
                 $loan->loan_type = $request->loan_type;
                 $loan->loan_status = $request->loan_status;
                 $loan->loan_reason = $request->loan_reason;
-                $loan->start_date = $request->start_date;
+                $loan->start_date =  $request->start_date;
                 $loan->end_date = $request->end_date;
                 $loan->interest_type = $request->interest_type;
                 $loan->interest_rate = $request->interest_rate;
@@ -439,7 +439,11 @@ class LoanController extends Controller
         $loan_payment = Loan::find($id)->initial_amount;
         $schedule = LoanSchedule::where('loan_id',$id)->where('status',1)->sum('principal_payment');
         $outstanding_balance = $loan_payment - $schedule;
-        return view('director.loan.schdule.manage_schdule',['data'=>LoanSchedule::where('loan_id',$id)->get(),'id'=>$id, 'loan'=> Loan::all(),'data_payment'=>LoanPayment::where('loan_id',$id)->get(),'id'=>$id,'outstanding_balance'=>$outstanding_balance,'schdule'=>$schedule,'loan_payment'=>$loan_payment]);
+        $loan = Loan::find($id);
+        $borrower_name = Borrower::find($loan->borrower_id)->name;
+        $legal_loan_id = Loan::find($id)->legal_loan_id;
+        // return LoanSchedule::where('loan_id',$id)->get();
+        return view('director.loan.schdule.manage_schdule',['data'=>LoanSchedule::where('loan_id',$id)->get(),'id'=>$id, 'loan'=> Loan::all(),'data_payment'=>LoanPayment::where('loan_id',$id)->get(),'id'=>$id,'outstanding_balance'=>$outstanding_balance,'schdule'=>$schedule,'loan_payment'=>$loan_payment,'legal_loan_id'=>$legal_loan_id,'borrower_name'=>$borrower_name]);
     }
 
     public function payments($id)
@@ -469,7 +473,12 @@ class LoanController extends Controller
 
     public function export_loan()
     {
-        return Excel::download(new LoanExport, 'users.xlsx');
+        try{
+            return Excel::download(new LoanExport, 'LOANDATA-'.Carbon::now()->format('d-m-Y').'.xlsx');
+        }catch(Exception $ex){
+            return redirect()->back()->with('error',$ex->getMessage());
+        }
+
     }
 
 }

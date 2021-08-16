@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Exports\SchduelExport;
 use App\Imports\SchduleImport;
+use App\Models\Borrower;
+use App\Models\Loan;
+use App\Models\LoanPayment;
 use App\Models\LoanSchduleApprovel;
 use App\Models\LoanSchedule;
 use Carbon\Carbon;
@@ -31,7 +34,7 @@ class LaonScheduleController extends Controller
         $schdule->principal_payment = $request->principal_payment;
         $schdule->interest_payment = $request->interest_payment;
         $schdule->expected_payment = $request->expected_payment;
-        $schdule->expected_payment_date = $request->expected_payment_date;
+        $schdule->expected_payment_date = Carbon::createFromFormat('d/m/Y', $request->expected_payment_date)->format('Y-m-d');
         if($schdule->save()){
             DB::commit();
             return redirect()->back()->with('success','Loan Schedule Added Successfully');
@@ -52,7 +55,7 @@ class LaonScheduleController extends Controller
         $schdule->principal_payment = $request->principal_payment;
         $schdule->interest_payment = $request->interest_payment;
         $schdule->expected_payment = $request->expected_payment;
-        $schdule->expected_payment_date = $request->expected_payment_date;
+        $schdule->expected_payment_date = Carbon::createFromFormat('d/m/Y', $request->expected_payment_date)->format('Y-m-d');
         if($schdule->save()){
             DB::commit();
             return redirect()->back()->with('success','Loan Schedule Update Successfully');
@@ -78,7 +81,7 @@ class LaonScheduleController extends Controller
             $schdule->principal_payment = $request->principal_payment;
             $schdule->interest_payment = $request->interest_payment;
             $schdule->expected_payment = $request->expected_payment;
-            $schdule->expected_payment_date = $request->expected_payment_date;
+            $schdule->expected_payment_date =$request->expected_payment_date;
             if($schdule->save()){
                 $request->status = "Approved";
                 $request->save();
@@ -96,7 +99,7 @@ class LaonScheduleController extends Controller
             $schdule->principal_payment = $request->principal_payment;
             $schdule->interest_payment = $request->interest_payment;
             $schdule->expected_payment = $request->expected_payment;
-            $schdule->expected_payment_date = $request->expected_payment_date;
+            $schdule->expected_payment_date =  $request->expected_payment_date;
             if($schdule->save()){
                 $request->status = "Approved";
                 $request->save();
@@ -150,7 +153,14 @@ class LaonScheduleController extends Controller
     }
 
     public function staff_manage($id){
-        return view('staff.loan.schdule.index',['data'=>LoanSchedule::where('loan_id',$id)->get()]);
+        $loan_payment = Loan::find($id)->initial_amount;
+        $schedule = LoanSchedule::where('loan_id',$id)->where('status',1)->sum('principal_payment');
+        $outstanding_balance = $loan_payment - $schedule;
+        $loan = Loan::find($id);
+        $borrower_name = Borrower::find($loan->borrower_id)->name;
+        $legal_loan_id = Loan::find($id)->legal_loan_id;
+        return view('staff.loan.schdule.index',['data'=>LoanSchedule::where('loan_id',$id)->get(),'id'=>$id, 'loan'=> Loan::all(),'data_payment'=>LoanPayment::where('loan_id',$id)->get(),'id'=>$id,'outstanding_balance'=>$outstanding_balance,'schdule'=>$schedule,'loan_payment'=>$loan_payment,'legal_loan_id'=>$legal_loan_id,'borrower_name'=>$borrower_name]);
+        // return view('staff.loan.schdule.index',['data'=>LoanSchedule::where('loan_id',$id)->get()]);
     }
 
     public function staff_viwe($id){
@@ -178,8 +188,15 @@ class LaonScheduleController extends Controller
        }
     }
 
-    public function export_schdule(){
+    public function export_schdule($id){
+        try{
 
-        return Excel::download(new SchduelExport, 'Schedule.xlsx');
+            $loan = Loan::find($id);
+            return Excel::download(new SchduelExport($loan->lender_name,$loan->legal_loan_id), 'Schedule-'.Carbon::now()->format('d-m-Y').'.xlsx');
+
+        }catch(Exception $ex){
+            return redirect()->back()->with('error',$ex->getMessage());
+        }
+
     }
 }

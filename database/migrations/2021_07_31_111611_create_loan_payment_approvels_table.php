@@ -14,6 +14,7 @@ class CreateLoanPaymentApprovelsTable extends Migration
     public function up()
     {
         Schema::create('loan_payment_approvels', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
             $table->foreignId('loan_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedBigInteger('payment_id')->nullable();

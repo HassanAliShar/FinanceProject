@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\BorrowerExport;
-use App\Imports\BorrowerImport;
+use Exception;
+use Carbon\Carbon;
 use App\Models\Borrower;
 use Illuminate\Support\Str;
 use App\Models\BorrowerFile;
 use Illuminate\Http\Request;
 use App\Models\BorrowerField;
+use App\Exports\BorrowerExport;
+use App\Imports\BorrowerImport;
 use App\Models\BorrowerApproval;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -28,7 +29,7 @@ class BorrowerController extends Controller
         $borrower->identity_no = $request->identity_no;
         $borrower->identity_type = $request->identity_type;
         $borrower->nationality = $request->nationality;
-        $borrower->dob = $request->dob;
+        $borrower->dob = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
         $borrower->tax_identity_no = $request->tax_identity_no;
         $borrower->borrower_type = $request->borrower_type;
         $borrower->person_in_contact = $request->person_in_contact;
@@ -128,13 +129,14 @@ class BorrowerController extends Controller
         }
     }
     public function update_borrower(Request $request,$id){
+        // return $request;
         DB::beginTransaction();
         $borrower = Borrower::find($id);
         $borrower->name = $request->name;
         $borrower->identity_no = $request->identity_no;
         $borrower->identity_type = $request->identity_type;
         $borrower->nationality = $request->nationality;
-        $borrower->dob = $request->dob;
+        $borrower->dob = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
         $borrower->tax_identity_no = $request->tax_identity_no;
         $borrower->borrower_type = $request->borrower_type;
         $borrower->person_in_contact = $request->person_in_contact;
@@ -241,7 +243,8 @@ class BorrowerController extends Controller
     }
 
     public function view_requested_borrower($id){
-        return view('director.Borrower.view_requestd_borrower',['data'=>BorrowerApproval::find($id)]);
+        // dd(BorrowerApproval::with('fields')->with('files')->find($id));
+        return view('director.Borrower.view_requestd_borrower',['data'=>BorrowerApproval::with('fields')->with('files')->find($id)]);
     }
 
     public function requested_borrower(){
@@ -407,6 +410,20 @@ class BorrowerController extends Controller
                         }
                     }
                 }
+                $borrower->files->each(function($files) {
+                    $files->delete();
+                });
+                if($approvel->files != null){
+                    foreach($approvel->files as $file_row){
+                        $files = new BorrowerFile();
+                        $files->name = $file_row->name;
+                        $files->value = $file_row->value;
+                        if(!$borrower->files()->save($files)){
+                            DB::rollback();
+                            return redirect()->back()->with('error','Borrower Not Added');
+                        }
+                    }
+                }
                 $approvel->status = 'Approved';
                 $approvel->save();
                 DB::commit();
@@ -460,8 +477,12 @@ class BorrowerController extends Controller
     }
 
     public function export_borrower(){
+        try {
+            return Excel::download(new BorrowerExport, 'BORROWERDATA-'.Carbon::now()->format('d-m-Y').'.xlsx');
+        } catch (Exception $ex) {
+            return redirect()->back()->with('error',$ex->getMessage());
+        }
 
-        return Excel::download(new BorrowerExport, 'borrower.xlsx');
     }
 
 }

@@ -57,7 +57,7 @@
                                     <label for="expected_payment_date" class="col-md-4 col-form-label text-md-right">Expected Payment Date</label>
 
                                     <div class="col-md-6">
-                                        <input id="expected_payment_date" type="date" class="form-control" value="{{ $data->expected_payment_date }}" placeholder="Expected Payment Date" name="expected_payment_date" required autocomplete="expected_payment_date">
+                                        <input id="expected_payment_date" type="text" class="form-control date" placeholder="DD/MM/YYYY" value="{{ date('d-m-Y', strtotime($data->expected_payment_date)) }}" placeholder="Expected Payment Date" name="expected_payment_date" required autocomplete="expected_payment_date">
                                     </div>
                                 </div>
 

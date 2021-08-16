@@ -57,8 +57,8 @@
                                         </a>
                                     </div>
                                     <div class="col-md-3">
-                                        <a class="btn btn-success mt-4" href="{{ route('export.payment') }}">
-                                           Export Data
+                                        <a class="btn btn-success mt-4" href="{{ route('export.payment',$id) }}">
+                                           Export Data <i class="fal fa-filter"></i>
                                         </a>
                                     </div>
                                 </div>

@@ -24,11 +24,31 @@
         @if (Auth::user()->role_id == getDirectorRoleId())
             <ul id="js-nav-menu" class="nav-menu">
                 <li>
-                    <a href="" title="Dashboard" data-filter-tags="Complaints Reports">
+                    <a href="{{ route('admin.dashboard') }}" title="Dashboard" data-filter-tags="Complaints Reports">
                         {{-- <i class="fal fa-backpack"></i> --}}
                         <i class="fal fa-home"></i>
                         <span class="nav-link-text" data-i18n="nav.Complaints Reports">Dashboard</span>
                     </a>
+                </li>
+                <li>
+                    <a href="#" title="Directors" data-filter-tags="Complaints Reports">
+                        <i class="fal fa-user-secret"></i>
+                        <span class="nav-link-text" data-i18n="nav.Vehicles Reports">Dircetors</span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="{{ route('add.directors') }}" title="Add Director" data-filter-tags="Vehicles Reports General Complains">
+                                <i class="fal fa-plus-circle"></i>
+                                <span class="nav-link-text" data-i18n="nav.Vehicles Reports General Complains">Add</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('manage.directors') }}" title="Manage Dircetors" data-filter-tags="Vehicles Reports Customer Complains">
+                                <i class="fal fa-tasks-alt"></i>
+                                <span class="nav-link-text" data-i18n="nav.Vehicles Reports Customer Complains">Manage</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <a href="#" title="Staff" data-filter-tags="Complaints Reports">
@@ -138,9 +158,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('requested.schdule') }}" title="Requested schdules" data-filter-tags="Vehicles Reports Customer Complains">
+                            <a href="{{ route('requested.schdule') }}" title="Requested Schedules" data-filter-tags="Vehicles Reports Customer Complains">
                                 <i class="fal fa-calendar-alt"></i>
-                                <span class="nav-link-text" data-i18n="nav.Vehicles Reports Customer Complains">Requested schdules
+                                <span class="nav-link-text" data-i18n="nav.Vehicles Reports Customer Complains">Requested Schedules
                                     @if (getSchduleNotifications() != 0)
                                         <span class="text-danger ml-auto mr-4">{{ getSchduleNotifications() }}</span>
                                     @endif
@@ -184,7 +204,7 @@
         @if (Auth::user()->role_id == getManagerRoleId())
             <ul id="js-nav-menu" class="nav-menu">
                 <li>
-                    <a href="{{ route('admin.dashboard') }}" title="Dashboard" data-filter-tags="Complaints Reports">
+                    <a href="{{ route('manager.dashboard') }}" title="Dashboard" data-filter-tags="Complaints Reports">
                         <i class="fal fa-home"></i>
                         <span class="nav-link-text" data-i18n="nav.Complaints Reports">Dashboard</span>
                     </a>
@@ -240,9 +260,9 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('requested.mg.schdule') }}" title="Requested schdules" data-filter-tags="Vehicles Reports Customer Complains">
+                            <a href="{{ route('requested.mg.schdule') }}" title="Requested Schedules" data-filter-tags="Vehicles Reports Customer Complains">
                                 <i class="fal fa-calendar-alt"></i>
-                                <span class="nav-link-text" data-i18n="nav.Vehicles Reports Customer Complains">Requested schdules</span>
+                                <span class="nav-link-text" data-i18n="nav.Vehicles Reports Customer Complains">Requested Schedules</span>
                             </a>
                         </li>
                         <li>
@@ -258,7 +278,7 @@
         @if (Auth::user()->role_id == getStaffRoleId())
             <ul id="js-nav-menu" class="nav-menu">
                 <li>
-                    <a href="" title="Dashboard" data-filter-tags="Complaints Reports">
+                    <a href="{{ route('staff.dashboard') }}" title="Dashboard" data-filter-tags="Complaints Reports">
                         <i class="fal fa-home"></i>
                         <span class="nav-link-text" data-i18n="nav.Complaints Reports">Dashboard</span>
                     </a>

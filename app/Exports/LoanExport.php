@@ -2,16 +2,23 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use App\Models\Loan;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class LoanExport implements FromCollection,WithHeadingRow
+class LoanExport implements FromCollection, WithHeadings
 {
+
     public function headings(): array
     {
         return [
-            '#',
+            ['Loan Data Of ', env('APP_NAME')],
+            ['Date Time', Carbon::now()->format('d-m-Y H-i-s')],
+            [],
+            ['#',
             'borrower_id',
             'lender_name',
             'legal_loan_id',
@@ -39,6 +46,7 @@ class LoanExport implements FromCollection,WithHeadingRow
             'notary_charges',
             'collateral',
             'bank_account',
+            ]
         ];
     }
     /**

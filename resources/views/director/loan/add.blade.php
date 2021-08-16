@@ -1,5 +1,28 @@
 @extends('home')
-
+{{-- <style>
+    #start_date {
+    position: relative;
+    width: 100%; height: calc(1.47em + 1rem + 2px);
+    color: white;
+    }
+    #start_date:before {
+        position: absolute;
+        top: 3px; left: 3px;
+        content: attr(data-date);
+        display: inline-block;
+        color: black;
+    }
+    #start_date::-webkit-datetime-edit, #start_date::-webkit-inner-spin-button, #start_date::-webkit-clear-button {
+        display: none;
+    }
+    #start_date::-webkit-calendar-picker-indicator {
+        position: absolute;
+        top: 3px;
+        right: 0;
+        color: black;
+        opacity: 1;
+    }
+</style> --}}
 @section('pagesection')
 <div class="container">
     <div class="subheader">
@@ -68,13 +91,14 @@
 
                                     <div class="col-md-4 mb-3">
                                         <label for="start_date" >Start Date</label>
-                                        <input id="start_date" type="date" class="form-control" placeholder="start_date" name="start_date" required autocomplete="start_date">
+                                        {{-- <input id="start_date" type="date" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control" data-date="" data-date-format="DD/MM/YYYY" placeholder="DD/MM/YYYY"> --}}
+                                        <input id="start_date" type="text" class="form-control date" placeholder="DD/MM/YYYY" name="start_date" required autocomplete="start_date">
                                     </div>
 
 
                                     <div class="col-md-4 mb-3">
                                         <label for="end_date" >Loan End Date</label>
-                                        <input id="end_date" type="date" class="form-control" name="end_date" required autocomplete="end_date">
+                                        <input id="end_date" type="text" class="form-control date" placeholder="DD/MM/YYYY" name="end_date" required autocomplete="end_date">
                                     </div>
 
                                     <div class="col-md-4 mb-3">
@@ -91,7 +115,7 @@
 
                                     <div class="col-md-4 mb-3">
                                         <label for="initial_amount" >Loan Initial Amount</label>
-                                        <input id="initial_amount" type="text" class="form-control" placeholder="Loan Initial Amount" name="initial_amount" required autocomplete="initial_amount">
+                                        <input id="initial_amount" type="number" class="form-control" placeholder="Loan Initial Amount" name="initial_amount" required autocomplete="initial_amount">
                                     </div>
 
                                     <div class="col-md-4 mb-3">
@@ -215,7 +239,7 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
     function removeRow(input){
@@ -255,6 +279,17 @@
             $('#fields').append(fields);
         });
         // Add New files End here
+
+        // $("#start_date").on("change", function() {
+        //     this.setAttribute(
+        //         "data-date",
+        //         moment(this.value, "YYYY-MM-DD")
+        //         .format( this.getAttribute("data-date-format") )
+        //     )
+        // }).trigger("change")
+
+
+
     });
 </script>
 @endsection

@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Borrower;
+use App\Models\Loan;
+use App\Models\LoanPayment;
 use App\Models\LoanSchduleApprovel;
 use App\Models\LoanSchedule;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +29,7 @@ class LoanSchduleApprovelController extends Controller
         $schdule->principal_payment = $request->principal_payment;
         $schdule->interest_payment = $request->interest_payment;
         $schdule->expected_payment = $request->expected_payment;
-        $schdule->expected_payment_date = $request->expected_payment_date;
+        $schdule->expected_payment_date = Carbon::createFromFormat('d/m/Y', $request->expected_payment_date)->format('Y-m-d');
         $schdule->status = 'Pending';
         $schdule->type = 'Insert';
         $schdule->user_id = Auth::user()->id;
@@ -51,7 +55,7 @@ class LoanSchduleApprovelController extends Controller
         $schdule->principal_payment = $request->principal_payment;
         $schdule->interest_payment = $request->interest_payment;
         $schdule->expected_payment = $request->expected_payment;
-        $schdule->expected_payment_date = $request->expected_payment_date;
+        $schdule->expected_payment_date = Carbon::createFromFormat('d/m/Y', $request->expected_payment_date)->format('Y-m-d');
         $schdule->status = 'Pending';
         $schdule->type = 'Update';
         $schdule->user_id = Auth::user()->id;
@@ -95,7 +99,13 @@ class LoanSchduleApprovelController extends Controller
 
     public function schedule($id)
     {
-        return view('manager.loan.schdule.manage_schdule',['data'=>LoanSchedule::where('loan_id',$id)->get(),'id'=>$id]);
+        $loan_payment = Loan::find($id)->initial_amount;
+        $schedule = LoanSchedule::where('loan_id',$id)->where('status',1)->sum('principal_payment');
+        $outstanding_balance = $loan_payment - $schedule;
+        $loan = Loan::find($id);
+        $borrower_name = Borrower::find($loan->borrower_id)->name;
+        $legal_loan_id = Loan::find($id)->legal_loan_id;
+        return view('manager.loan.schdule.manage_schdule',['data'=>LoanSchedule::where('loan_id',$id)->get(),'id'=>$id, 'loan'=> Loan::all(),'data_payment'=>LoanPayment::where('loan_id',$id)->get(),'id'=>$id,'outstanding_balance'=>$outstanding_balance,'schdule'=>$schedule,'loan_payment'=>$loan_payment,'legal_loan_id'=>$legal_loan_id,'borrower_name'=>$borrower_name]);
     }
     // REquested Schdule function
     public function requested_schdule(){

@@ -56,23 +56,44 @@
                                     </div>
                                     <div class="col-md-3">
                                         <a download class="btn btn-success mt-4 ml-auto" href="{{ route('export.loan') }}">
-                                            Eport Data
+                                            Export Data <i class="fal fa-filter"></i>
                                         </a>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <!-- datatable start -->
-                            <table class="table table-bordered table-hover table-striped w-100" id="dt-basic-example">
+                            <table class="table table-bordered table-hover table-striped w-100" id="dt-basic-example2">
                                 <thead>
                                     <tr>
-                                        <th>Lender Name</th>
-                                        <th>Legal Loan Id</th>
-                                        <th>Loan Type</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>Interest Type</th>
-                                        <th>Initial Amount</th>
+                                       <th> lender_name</th>
+                                       <th> legal_loan_id</th>
+                                       <th> loan_internal_number</th>
+                                       <th> loan_type</th>
+                                       <th> loan_status</th>
+                                       <th> loan_reason</th>
+                                       <th> start_date</th>
+                                       <th> end_date</th>
+                                       <th> interest_type</th>
+                                       <th> interest_rate</th>
+                                       <th> initial_amount</th>
+                                       <th> tenor</th>
+                                       <th> payment_period</th>
+                                       <th> administration_charges</th>
+                                       <th> government_charges</th>
+                                       <th> agreement_charges</th>
+                                       <th> provision_charges</th>
+                                       <th> skmht_charges</th>
+                                       <th> apht_charges</th>
+                                       <th> fiduciary_charges</th>
+                                       <th> certificate_charges</th>
+                                       <th> other_charges</th>
+                                       <th> insurance_charges</th>
+                                       <th> notary_charges</th>
+                                       <th> collateral</th>
+                                       <th> bank_account</th>
+
+
                                         <th>Payment/Schedules</th>
                                         <th>Action</th>
                                     </tr>
@@ -83,11 +104,30 @@
                                         <tr>
                                             <td>{{ $item->lender_name }}</td>
                                             <td>{{ $item->legal_loan_id }}</td>
+                                            <td>{{ $item->loan_internal_number }}</td>
                                             <td>{{ $item->loan_type }}</td>
-                                            <td>{{ date('d-m-Y', strtotime( $item->start_date )) }}</td>
-                                            <td>{{ date('d-m-Y', strtotime( $item->end_date)) }}</td>
+                                            <td>{{ $item->loan_status }}</td>
+                                            <td>{{ $item->loan_reason }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($item->start_date)) }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($item->end_date)) }}</td>
                                             <td>{{ $item->interest_type }}</td>
-                                            <td>{{ number_format( $item->initial_amount, 2, ',', '.')  }}</td>
+                                            <td>{{ $item->interest_rate }}</td>
+                                            <td>{{ number_format( $item->initial_amount, 2, ',', '.') }}</td>
+                                            <td>{{ $item->tenor }}</td>
+                                            <td>{{ $item->payment_period }}</td>
+                                            <td>{{ $item->administration_charges }}</td>
+                                            <td>{{ $item->government_charges }}</td>
+                                            <td>{{ $item->agreement_charges }}</td>
+                                            <td>{{ $item->provision_charges }}</td>
+                                            <td>{{ $item->skmht_charges }}</td>
+                                            <td>{{ $item->apht_charges }}</td>
+                                            <td>{{ $item->fiduciary_charges }}</td>
+                                            <td>{{ $item->certificate_charges }}</td>
+                                            <td>{{ $item->other_charges }}</td>
+                                            <td>{{ $item->insurance_charges }}</td>
+                                            <td>{{ $item->notary_charges }}</td>
+                                            <td>{{ $item->collateral }}</td>
+                                            <td>{{ $item->bank_account }}</td>
                                             <td><a href="{{ route('manage.schedule',$item->id) }}" class="btn btn-sm btn-primary">Payment/Schedules</a></td>
                                             <td>
                                                 <a href="{{ route('show.loan',$item->id) }}" class="btn btn-sm btn-primary">View</a>
@@ -99,8 +139,15 @@
 
                                     @endforeach
                                 </tbody>
-                                <tfoot>
+                                {{-- <tfoot>
                                     <tr>
+                                        <th>Lender Name</th>
+                                        <th>Legal Loan Id</th>
+                                        <th>Loan Type</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Interest Type</th>
+                                        <th>Initial Amount</th>
                                         <th>Lender Name</th>
                                         <th>Legal Loan Id</th>
                                         <th>Loan Type</th>
@@ -111,7 +158,7 @@
                                         <th>Payment/Schedules</th>
                                         <th>Action</th>
                                     </tr>
-                                </tfoot>
+                                </tfoot> --}}
                             </table>
                         <!-- datatable end -->
                     </div>

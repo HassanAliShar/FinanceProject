@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Borrower;
 use Illuminate\Support\Str;
-use App\Models\BorrowerApproval;
-use App\Models\BorrowerFieldApproval;
-use App\Models\BorrowerFileApproval;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\BorrowerApproval;
 use Illuminate\Support\Facades\DB;
+use App\Models\BorrowerFileApproval;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use App\Models\BorrowerFieldApproval;
 
 class BorrowerApprovelController extends Controller
 {
@@ -24,7 +26,7 @@ class BorrowerApprovelController extends Controller
         $borrower->identity_no = $request->identity_no;
         $borrower->identity_type = $request->identity_type;
         $borrower->nationality = $request->nationality;
-        $borrower->dob = $request->dob;
+        $borrower->dob = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
         $borrower->tax_identity_no = $request->tax_identity_no;
         $borrower->borrower_type = $request->borrower_type;
         $borrower->person_in_contact = $request->person_in_contact;
@@ -121,7 +123,7 @@ class BorrowerApprovelController extends Controller
         $borrower->identity_no = $get_data->identity_no;
         $borrower->identity_type = $get_data->identity_type;
         $borrower->nationality = $get_data->nationality;
-        $borrower->dob = $get_data->dob;
+        $borrower->dob = Carbon::createFromFormat('d/m/Y', $get_data->dob)->format('Y-m-d');
         $borrower->tax_identity_no = $get_data->tax_identity_no;
         $borrower->borrower_type = $get_data->borrower_type;
         $borrower->person_in_contact = $get_data->person_in_contact;
@@ -132,6 +134,39 @@ class BorrowerApprovelController extends Controller
         $borrower->occupation = $get_data->occupation;
         $borrower->line_of_business = $get_data->line_of_business;
         $borrower->bank_account = $get_data->bank_account;
+        $borrower->internal_number = $get_data->internal_number;
+        $borrower->place_of_birth = $get_data->place_of_birth;
+        $borrower->last_education = $get_data->last_education;
+        $borrower->mother_maiden = $get_data->mother_maiden;
+        $borrower->surveyor = $get_data->surveyor;
+        $borrower->partner_spouse = $get_data->partner_spouse;
+        $borrower->partner_spouse_identity_number = $get_data->partner_spouse_identity_number;
+        $borrower->partner_spouse_contact_number = $get_data->partner_spouse_contact_number;
+        $borrower->partner_spouse_domicile_address = $get_data->partner_spouse_domicile_address;
+        $borrower->marriage_status = $get_data->marriage_status;
+        $borrower->family_card_number = $get_data->family_card_number;
+        $borrower->home_number = $get_data->home_number;
+        $borrower->mobile_number = $get_data->mobile_number;
+        $borrower->office_number = $get_data->office_number;
+        $borrower->domicile_status = $get_data->domicile_status;
+        $borrower->email = $get_data->email;
+        $borrower->identity_address = $get_data->identity_address;
+        $borrower->domicile_address = $get_data->domicile_address;
+        $borrower->office_address = $get_data->office_address;
+        $borrower->line_of_business = $get_data->line_of_business;
+        $borrower->business_experience = $get_data->business_experience;
+        $borrower->business_capital = $get_data->business_capital;
+        $borrower->annual_income = $get_data->annual_income;
+        $borrower->other_income = $get_data->other_income;
+        $borrower->joint_income = $get_data->joint_income;
+        $borrower->total_income = $get_data->total_income;
+        $borrower->living_expenses = $get_data->living_expenses;
+        $borrower->business_expenses = $get_data->business_expenses;
+        $borrower->other_expenses = $get_data->other_expenses;
+        $borrower->other_loan = $get_data->other_loan;
+        $borrower->net_cash_flow = $get_data->net_cash_flow;
+        $borrower->total_assets = $get_data->total_assets;
+        $borrower->other_lenders = $get_data->other_lenders;
         $borrower->type = 'Delete';
         $borrower->user_id = Auth::user()->id;
         $borrower->status = 'Pending';
@@ -143,6 +178,7 @@ class BorrowerApprovelController extends Controller
         }
     }
     public function update_borrower_approve(Request $request,$id){
+        // return $request;
         DB::beginTransaction();
         $borrower = new BorrowerApproval();
         $borrower->borrower_id = $id;
@@ -150,7 +186,7 @@ class BorrowerApprovelController extends Controller
         $borrower->identity_no = $request->identity_no;
         $borrower->identity_type = $request->identity_type;
         $borrower->nationality = $request->nationality;
-        $borrower->dob = $request->dob;
+        $borrower->dob = Carbon::createFromFormat('d/m/Y', $request->dob)->format('Y-m-d');
         $borrower->tax_identity_no = $request->tax_identity_no;
         $borrower->borrower_type = $request->borrower_type;
         $borrower->person_in_contact = $request->person_in_contact;
@@ -226,6 +262,39 @@ class BorrowerApprovelController extends Controller
             //         }
             //     }
             // }
+            if($request->file_value != null){
+                // for($v = 0; $v<count($request->file_name); $v++){
+                //     $files = new BorrowerFile();
+                //     $files->name = $request->file_name[$v];
+                //     $fileName[$v] = Str::random(30).'.'.$request->file_value[$v]->extension();
+                //     $request->file_value[$v]->move(public_path('BorrowerFiles'), $fileName[$v]);
+                //     $files->value = $fileName[$v];
+                //     if(!$borrower->files()->save($files)){
+                //         DB::rollback();
+                //         return redirect()->back()->with('error','Borrower File Not Updated');
+                //     }
+                // }
+
+                foreach ($request->file_status as $v => $value) {
+                    $files = new BorrowerFileApproval();
+                    $v = (int)$v;
+                    $files->name = $request->file_name[$v];
+                    if($request->file_status[$v] != "null"){
+                        // return "kuch bhi";
+                        $files->value = $request->file_status[$v];
+                    }
+                    else{
+
+                        $fileName[$v] = Str::random(30).'.'.$request->file_value[$v]->extension();
+                        $request->file_value[$v]->move(public_path('BorrowerFiles'), $fileName[$v]);
+                        $files->value = $fileName[$v];
+                    }
+                    if(!$borrower->files()->save($files)){
+                        DB::rollback();
+                        return redirect()->back()->with('error','Borrower File Not Updated');
+                    }
+                }
+            }
             DB::commit();
             return redirect()->back()->with('success','Request send for Update');
         }

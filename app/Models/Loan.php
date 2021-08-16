@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Loan extends Model
 {
@@ -38,6 +39,15 @@ class Loan extends Model
         'collateral',
         'bank_account'
     ];
+    /**
+     * Get the borrowers that owns the Loan
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function borrower()
+    {
+        return $this->belongsTo(Borrower::class);
+    }
     public function fields()
     {
         return $this->hasMany(LoanField::class);
@@ -48,8 +58,13 @@ class Loan extends Model
         return $this->hasMany(LoanFile::class);
     }
 
-    public function borrowers()
+    public function payments()
     {
-        return $this->hasMany(Borrower::class);
+        return $this->hasMany(LoanPayment::class);
     }
+
+    public function outstanding_payment(){
+        return $this->initial_amount - $this->payments->sum('payment_amount');
+    }
+
 }

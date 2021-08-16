@@ -48,7 +48,7 @@
                                     <label for="payment_date" class="col-md-4 col-form-label text-md-right">Payment Date</label>
 
                                     <div class="col-md-6">
-                                        <input id="payment_date" type="date" class="form-control" placeholder="Payment Date" name="payment_date" required autocomplete="payment_date">
+                                        <input id="payment_date" type="text" class="form-control date" placeholder="DD/MM/YYYY" placeholder="Payment Date" name="payment_date" required autocomplete="payment_date">
                                     </div>
                                 </div>
 

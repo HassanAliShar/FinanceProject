@@ -14,6 +14,7 @@ class CreateLoanPaymentsTable extends Migration
     public function up()
     {
         Schema::create('loan_payments', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
             $table->foreignId('loan_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->decimal('payment_amount',10,2);

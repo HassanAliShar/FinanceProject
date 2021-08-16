@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Exports\PaymentExport;
 use App\Imports\PaymentImport;
+use App\Models\Loan;
 use App\Models\LoanPayment;
 use App\Models\LoanPaymentApprovel;
 use App\Models\LoanSchduleApprovel;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +30,7 @@ class LaonPaymentController extends Controller
         $payment->loan_id = $id;
         $payment->payment_amount = $request->payment_amount;
         $payment->interest_amount = $request->interest_amount;
-        $payment->payment_date = $request->payment_date;
+        $payment->payment_date = Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('Y-m-d');
         $payment->payment_note = $request->payment_note;
         if($payment->save()){
             DB::commit();
@@ -49,7 +51,7 @@ class LaonPaymentController extends Controller
         $payment = LoanPayment::find($id);
         $payment->payment_amount = $request->payment_amount;
         $payment->interest_amount = $request->interest_amount;
-        $payment->payment_date = $request->payment_date;
+        $payment->payment_date = Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('Y-m-d');
         $payment->payment_note = $request->payment_note;
         if($payment->save()){
             DB::commit();
@@ -165,8 +167,13 @@ class LaonPaymentController extends Controller
 
     }
 
-    public function export_payment(){
+    public function export_payment($id){
+        try{
+            $loan = Loan::find($id);
+            return Excel::download(new PaymentExport($loan->lender_name,$loan->legal_loan_id), 'Payment-'.Carbon::now()->format('d-m-Y').'.xlsx');
+        }catch(Exception $ex){
+            return redirect()->back()->with('error',$ex->getMessage());
+        }
 
-        return Excel::download(new PaymentExport, 'Payment.xlsx');
     }
 }

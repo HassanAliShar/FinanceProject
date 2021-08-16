@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\LoanPaymentApprovel;
 use App\Models\LoanSchdaleApprovel;
 use App\Models\LoanSchduleApprovel;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,8 +58,8 @@ class LoanApprovelController extends Controller
             $loan->loan_type = $request->loan_type;
             $loan->loan_status = $request->loan_status;
             $loan->loan_reason = $request->loan_reason;
-            $loan->start_date = $request->start_date;
-            $loan->end_date = $request->end_date;
+            $loan->start_date = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
+            $loan->end_date = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
             $loan->interest_type = $request->interest_type;
             $loan->interest_rate = $request->interest_rate;
             $loan->initial_amount = $request->initial_amount;
@@ -166,8 +167,8 @@ class LoanApprovelController extends Controller
             $loan->loan_type = $request->loan_type;
             $loan->loan_status = $request->loan_status;
             $loan->loan_reason = $request->loan_reason;
-            $loan->start_date = $request->start_date;
-            $loan->end_date = $request->end_date;
+            $loan->start_date = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
+            $loan->end_date = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
             $loan->interest_type = $request->interest_type;
             $loan->interest_rate = $request->interest_rate;
             $loan->initial_amount = $request->initial_amount;
@@ -220,6 +221,38 @@ class LoanApprovelController extends Controller
                 //         }
                 //     }
                 // }
+                if($request->file_value != null){
+                    // for($v = 0; $v<count($request->file_name); $v++){
+                    //     $files = new BorrowerFile();
+                    //     $files->name = $request->file_name[$v];
+                    //     $fileName[$v] = Str::random(30).'.'.$request->file_value[$v]->extension();
+                    //     $request->file_value[$v]->move(public_path('BorrowerFiles'), $fileName[$v]);
+                    //     $files->value = $fileName[$v];
+                    //     if(!$borrower->files()->save($files)){
+                    //         DB::rollback();
+                    //         return redirect()->back()->with('error','Borrower File Not Updated');
+                    //     }
+                    // }
+
+                    foreach ($request->file_status as $v => $value) {
+                        $files = new LoanFileApprovel();
+                        $v = (int)$v;
+                        $files->name = $request->file_name[$v];
+                        if($request->file_status[$v] != "null"){
+                            // return "kuch bhi";
+                            $files->value = $request->file_status[$v];
+                        }
+                        else{
+                            $fileName[$v] = Str::random(30).'.'.$request->file_value[$v]->extension();
+                            $request->file_value[$v]->move(public_path('BorrowerFiles'), $fileName[$v]);
+                            $files->value = $fileName[$v];
+                        }
+                        if(!$loan->files()->save($files)){
+                            DB::rollback();
+                            return redirect()->back()->with('error','Borrower File Not Updated');
+                        }
+                    }
+                }
                 DB::commit();
                 return redirect()->back()->with('success','Laon Updated Request Send Successfully');
             }
@@ -248,8 +281,8 @@ class LoanApprovelController extends Controller
         $loan->lender_name = $request->lender_name;
         $loan->legal_loan_id = $request->legal_loan_id;
         $loan->loan_type = $request->loan_type;
-        $loan->start_date = $request->start_date;
-        $loan->end_date = $request->end_date;
+        $loan->start_date = Carbon::createFromFormat('d/m/Y', $request->start_date)->format('Y-m-d');
+        $loan->end_date = Carbon::createFromFormat('d/m/Y', $request->end_date)->format('Y-m-d');
         $loan->interest_type = $request->interest_type;
         $loan->interest_rate = $request->interest_rate;
         $loan->initial_amount = $request->initial_amount;

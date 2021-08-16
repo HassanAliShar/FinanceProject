@@ -23,7 +23,7 @@
                 <div class="panel-container show">
                     <div class="panel-content">
                         <div class="card-body">
-                            <form method="POST" action="{{ route('update.b.approve',$data->id) }}">
+                            <form method="POST" action="{{ route('update.b.approve',$data->id) }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group row">
                                     <div class="col-md-6 mb-3">
@@ -55,7 +55,7 @@
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="dob" >Date Of Birth</label>
-                                        <input id="dob" type="date" class="form-control" value="{{ $data->dob }}" name="dob" required autocomplete="dob">
+                                        <input id="dob" type="text" class="form-control date" placeholder="DD/MM/YYYY" value="{{ date('d-m-Y', strtotime($data->dob)) }}" name="dob" required autocomplete="dob">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="tax_identity_no" >Tax Identity Number</label>
@@ -82,12 +82,12 @@
                                         <input id="partner_spouse_identity_number" type="text" class="form-control" value="{{ $data->partner_spouse_identity_number }}" placeholder="Partner/Spouse Identity Number" name="partner_spouse_identity_number" required autocomplete="partner_spouse_identity_number">
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label for="partner_spouse_contact_number" >Person in Contact</label>
-                                        <input id="partner_spouse_contact_number" type="text" class="form-control" value="{{ $data->partner_spouse_contact_number }}" placeholder="Partner/Spouse Contact Numbert" name="partner_spouse_contact_number" required autocomplete="partner_spouse_contact_number">
+                                        <label for="partner_spouse_contact_number" >Person in Contact Number</label>
+                                        <input id="partner_spouse_contact_number" type="text" class="form-control" value="{{ $data->partner_spouse_contact_number }}" placeholder="Partner/Spouse Contact Number" name="partner_spouse_contact_number" required autocomplete="partner_spouse_contact_number">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="partner_spouse_domicile_address" >Partner/Spouse Domicile Address</label>
-                                        <input id="partner_spouse_domicile_address" type="text" class="form-control" value="{{ $data->partner_spouse_domicile_address }}" placeholder="Person in Contact" name="partner_spouse_domicile_address" required autocomplete="partner_spouse_domicile_address">
+                                        <input id="partner_spouse_domicile_address" type="text" class="form-control" value="{{ $data->partner_spouse_domicile_address }}" placeholder="Partner/Spouse Domicile Address" name="partner_spouse_domicile_address" required autocomplete="partner_spouse_domicile_address">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="marriage_status" >Marriage Status</label>
@@ -240,6 +240,7 @@
                                                     <input id="" type="text" class="form-control" value="{{ $frow->name }}" placeholder="File Name" name="file_name[]" required autocomplete="bank_account">
                                                 </div>
                                                 <div class="col-md-5">
+                                                    <input type="hidden" class="data-val" name="file_status[]" value="{{ $frow->value }}"/>
                                                     <input id="file" type="file" class="form-control" value="{{ asset('BorrowerFiles/'.$frow->value) }}" name="file_value[]" autocomplete="bank_account">
                                                     <img src="{{ asset('public/BorrowerFiles/'.$frow->value) }}" style="height: 80px; width:80px"/>
                                                 </div>
@@ -299,6 +300,7 @@
                                 '<input id="" type="text" class="form-control" placeholder="File Name" name="file_name[]" required autocomplete="bank_account">'+
                             '</div>'+
                             '<div class="col-md-5">'+
+                                '<input type="hidden" class="data-val" name="file_status[]" value="null"/>'+
                                 '<input id="bank_account" type="file" class="form-control" placeholder="Value" name="file_value[]" required autocomplete="bank_account">'+
                             '</div>'+
                             '<div class="col-sm-2 col-2" onclick="removeRow(this)">'+

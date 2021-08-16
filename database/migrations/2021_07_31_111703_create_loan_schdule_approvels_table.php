@@ -14,6 +14,7 @@ class CreateLoanSchduleApprovelsTable extends Migration
     public function up()
     {
         Schema::create('loan_schdule_approvels', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
             $table->foreignId('loan_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedBigInteger('schdule_id')->nullable();

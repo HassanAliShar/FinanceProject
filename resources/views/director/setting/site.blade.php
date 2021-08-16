@@ -65,7 +65,10 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <label>Welcome Message</label>
-                                        <input type="text" value="{{ $welcome->value }}" placeholder="Enter New Site Message" name="site_message" class="form-control">
+                                        <textarea name="site_message" class="form-control" rows="10">
+                                            {{ $welcome->value }}
+                                        </textarea>
+                                        {{-- <input type="text" value="{{ $welcome->value }}" placeholder="Enter New Site Message" name="site_message" class="form-control"> --}}
                                     </div>
                                     <div class="col-md-4 justify-content-center">
                                         <br/>

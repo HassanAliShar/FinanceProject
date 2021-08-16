@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LoanSchedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -25,7 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $today = Carbon::now();
-        return view('director.dashboard',['data'=>LoanSchedule::all(),'late_payment'=>LoanSchedule::where('expected_payment_date','<',$today)->get()])->with('success',getMessage());
+        if(Auth::user()->role_id == getDirectorRoleId()){
+            return redirect('/admin_dashboard');
+        }
+        if(Auth::user()->role_id == getManagerRoleId()){
+            return redirect('/manager_dashboard');
+        }
+        if(Auth::user()->role_id == getStaffRoleId()){
+            return redirect('/staff_dashboard');
+        }
+
     }
 }

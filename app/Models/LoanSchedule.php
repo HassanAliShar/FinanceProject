@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class LoanSchedule extends Model
 {
@@ -16,6 +17,16 @@ class LoanSchedule extends Model
         'expected_payment',
         'expected_payment_date'
     ];
+
+    /**
+     * Get the user that owns the LoanSchedule
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function loan()
+    {
+        return $this->belongsTo(Loan::class);
+    }
 
     public function scopeData($query){
         $date = Carbon::now();
@@ -49,6 +60,9 @@ class LoanSchedule extends Model
                 }
                 if($schdule_date >10){
                     return '<span class="badge badge-primary badge-pill">Special Attention</span>';
+                }
+                else{
+                    return 'Current';
                 }
             }
             else{

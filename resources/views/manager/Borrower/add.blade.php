@@ -55,7 +55,7 @@
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="dob" >Date Of Birth</label>
-                                        <input id="dob" type="date" class="form-control" name="dob" required autocomplete="dob">
+                                        <input id="dob" type="text" class="form-control date" placeholder="DD/MM/YYYY" name="dob" required autocomplete="dob">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="tax_identity_no" >Tax Identity Number</label>
@@ -82,12 +82,12 @@
                                         <input id="partner_spouse_identity_number" type="text" class="form-control" placeholder="Partner/Spouse Identity Number" name="partner_spouse_identity_number" required autocomplete="partner_spouse_identity_number">
                                     </div>
                                     <div class="col-md-4 mb-3">
-                                        <label for="partner_spouse_contact_number" >Person in Contact</label>
-                                        <input id="partner_spouse_contact_number" type="text" class="form-control" placeholder="Partner/Spouse Contact Numbert" name="partner_spouse_contact_number" required autocomplete="partner_spouse_contact_number">
+                                        <label for="partner_spouse_contact_number" >Person in Contact Number</label>
+                                        <input id="partner_spouse_contact_number" type="text" class="form-control" placeholder="Partner/Spouse Contact Number" name="partner_spouse_contact_number" required autocomplete="partner_spouse_contact_number">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="partner_spouse_domicile_address" >Partner/Spouse Domicile Address</label>
-                                        <input id="partner_spouse_domicile_address" type="text" class="form-control" placeholder="Person in Contact" name="partner_spouse_domicile_address" required autocomplete="partner_spouse_domicile_address">
+                                        <input id="partner_spouse_domicile_address" type="text" class="form-control" placeholder="Partner/Spouse Domicile Address" name="partner_spouse_domicile_address" required autocomplete="partner_spouse_domicile_address">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="marriage_status" >Marriage Status</label>

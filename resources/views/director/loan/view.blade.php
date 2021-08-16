@@ -73,13 +73,13 @@
 
                                     <div class="col-md-4 mb-3">
                                         <label for="start_date" >Start Date</label>
-                                        <input id="start_date" type="date" class="form-control" readonly value="{{ $data->start_date }}" placeholder="start_date" name="start_date" required autocomplete="start_date">
+                                        <input id="start_date" type="text" class="form-control date" placeholder="DD/MM/YYYY" readonly value="{{ date('d-m-Y', strtotime($data->start_date)) }}" placeholder="start_date" name="start_date" required autocomplete="start_date">
                                     </div>
 
 
                                     <div class="col-md-4 mb-3">
                                         <label for="end_date" >Loan End Date</label>
-                                        <input id="end_date" type="date" class="form-control" readonly value="{{ $data->end_date }}" name="end_date" required autocomplete="end_date">
+                                        <input id="end_date" type="text" class="form-control date" placeholder="DD/MM/YYYY" readonly value="{{ date('d-m-Y', strtotime($data->end_date)) }}" name="end_date" required autocomplete="end_date">
                                     </div>
 
                                     <div class="col-md-4 mb-3">
@@ -96,7 +96,7 @@
 
                                     <div class="col-md-4 mb-3">
                                         <label for="initial_amount" >Loan Initial Amount</label>
-                                        <input id="initial_amount" type="text" class="form-control" readonly value="{{ $data->initial_amount }}" placeholder="Loan Initial Amount" name="initial_amount" required autocomplete="initial_amount">
+                                        <input id="initial_amount" type="number" class="form-control" readonly value="{{ $data->initial_amount }}" placeholder="Loan Initial Amount" name="initial_amount" required autocomplete="initial_amount">
                                     </div>
 
                                     <div class="col-md-4 mb-3">
@@ -213,7 +213,7 @@
                                                         <input id="" type="text" class="form-control" readonly value="{{ $frow->name }}" placeholder="File Name" name="file_name[]" required autocomplete="bank_account">
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input id="file" type="file" class="form-control" readonly value="{{ asset('BorrowerFiles/'.$frow->value) }}" name="file_value[]" autocomplete="bank_account">
+                                                        <a download href="{{ asset('public/LoanFiles/'.$frow->value) }}" class="btn btn-sm btn-primary">Download</a>
                                                         <img src="{{ asset('public/LoanFiles/'.$frow->value) }}" style="height: 100px; width:100px"/>
                                                     </div>
                                                 </div>

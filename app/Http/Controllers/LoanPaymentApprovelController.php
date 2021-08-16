@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\LoanPayment;
 use App\Models\LoanPaymentApprovel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class LoanPaymentApprovelController extends Controller
         $payment->loan_id = $id;
         $payment->payment_amount = $request->payment_amount;
         $payment->interest_amount = $request->interest_amount;
-        $payment->payment_date = $request->payment_date;
+        $payment->payment_date = Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('Y-m-d');
         $payment->payment_note = $request->payment_note;
         $payment->status = 'Pending';
         $payment->user_id = Auth::user()->id;
@@ -50,7 +51,7 @@ class LoanPaymentApprovelController extends Controller
         $payment->loan_id = $request->loan_id;
         $payment->payment_amount = $request->payment_amount;
         $payment->interest_amount = $request->interest_amount;
-        $payment->payment_date = $request->payment_date;
+        $payment->payment_date = Carbon::createFromFormat('d/m/Y', $request->payment_date)->format('Y-m-d');
         $payment->payment_note = $request->payment_note;
         $payment->status = "Pending";
         $payment->type = "Update";

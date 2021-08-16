@@ -34,7 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['director'])->group(function(){
         Route::get('/admin_dashboard',function(){
             $today = Carbon::now();
-            return view('director.dashboard',['data'=>LoanSchedule::all(),'late_payment'=>LoanSchedule::where('expected_payment_date','<',$today)->get()]);
+            // dd(LoanSchedule::with('loan.borrower')->where('expected_payment_date','<',$today)->where('status',0)->get());
+            return view('director.dashboard',['data'=>LoanSchedule::with('loan')->get(),'late_payment'=>LoanSchedule::with('loan.borrower')->where('expected_payment_date','<',$today->subDays(10))->where('status',0)->get()]);
         })->name('admin.dashboard');
         Route::post('/import_user','LoanController@import_user')->name('import.user');
         // directore routes for staff
@@ -46,6 +47,17 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/update/{id}','StaffController@update_staff')->name('update.staff');
             Route::get('delete/{id}','StaffController@delete_staff')->name('delete.staff');
         });
+
+
+        Route::prefix('dir')->group(function(){
+            Route::get('/manage','DirectorController@index')->name('manage.directors');
+            Route::get('/add','DirectorController@add')->name('add.directors');
+            Route::get('/edit/{id}','DirectorController@edit')->name('edit.dircetors');
+            Route::get('/delete/{id}' , 'DirectorController@delete')->name('delete.directors');
+            Route::post('/store','DirectorController@store')->name('store.director');
+            Route::post('/update/{id}', 'DirectorController@update')->name('update.director');
+        });
+
         //director routes for Borrwoers
         Route::prefix('borrower')->group(function(){
             Route::get('/add', 'BorrowerController@add_borrower')->name('add.borrower');
@@ -101,7 +113,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/reject/{id}','LaonScheduleController@reject_schdule')->name('reject.schdule');
             Route::post('/import_schdule','LaonScheduleController@import_schdule')->name('import.schdule');
             Route::get('/paid/{id}','LaonScheduleController@schdule_paid')->name('paid.schdule');
-            Route::get('/export_schdule','LaonScheduleController@export_schdule')->name('export.schdule');
+            Route::get('/export_schdule/{id}','LaonScheduleController@export_schdule')->name('export.schdule');
          });
 
          // director route of laon payments
@@ -117,7 +129,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/approve/{id}','LaonPaymentController@approve_request')->name('approve.payment');
             Route::get('/reject/{id}','LaonPaymentController@reject_request')->name('reject.payment');
             Route::post('/import','LaonPaymentController@import_payment')->name('import.payment');
-            Route::get('/export', 'LaonPaymentController@export_payment')->name('export.payment');
+            Route::get('/export/{id}', 'LaonPaymentController@export_payment')->name('export.payment');
 
          });
 
@@ -149,6 +161,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Routes For Managers
     Route::middleware(['managers'])->group(function () {
+        Route::get('/manager_dashboard',function(){
+            $today = Carbon::now();
+            return view('manager.dashboard',['data'=>LoanSchedule::with('loan')->get(),'late_payment'=>LoanSchedule::with('loan.borrower')->where('expected_payment_date','<',$today->subDays(10))->where('status',0)->get()]);
+        })->name('manager.dashboard');
         Route::prefix('borrw')->group(function () {
             Route::get('/add', 'BorrowerApprovelController@add_borrower_approve')->name('add.b.approve');
             Route::get('/manage','BorrowerApprovelController@manage_borrower_approve')->name('manage.b.approve');
@@ -203,6 +219,10 @@ Route::middleware(['auth'])->group(function () {
 
     });
     Route::middleware('staffs')->group(function(){
+        Route::get('/staff_dashboard',function(){
+            $today = Carbon::now();
+            return view('staff.dashboard',['data'=>LoanSchedule::with('loan')->get(),'late_payment'=>LoanSchedule::with('loan.borrower')->where('expected_payment_date','<',$today->subDays(10))->where('status',0)->get()]);
+        })->name('staff.dashboard');
         Route::get('/staff_borrower', 'BorrowerController@staff_borrower')->name('staff.borrower');
         Route::get('/borrower/{id}', 'BorrowerController@staff_view_borrower')->name('staff.view.borrower');
         Route::prefix('staff-loan')->group(function (){

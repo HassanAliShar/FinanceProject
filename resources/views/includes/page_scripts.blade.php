@@ -12,6 +12,7 @@
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script> --}}
 <script src="{{ asset('js/datagrid/datatables/datatables.bundle.js') }}"></script>
 <script src="{{ asset('js/datagrid/datatables/datatables.export.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="{{ asset('js/notifications/toastr/toastr.js') }}"></script>
 
 
