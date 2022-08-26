@@ -221,7 +221,7 @@
 
         $('.date').datetimepicker({
         format: '{{ config('app.date_format_javascript') }}',
-        // locale: 'en'
+        locale: 'en'
         });
 
     });

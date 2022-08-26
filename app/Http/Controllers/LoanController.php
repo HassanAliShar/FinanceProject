@@ -29,7 +29,8 @@ class LoanController extends Controller
      */
     public function index()
     {
-        return view('director.loan.manage',['data'=>Loan::all(),'borrower'=>Borrower::all()]);
+        // dd(Loan::with('borrower')->get());
+        return view('director.loan.manage',['data'=>Loan::with('borrower')->get(),'borrower'=>Borrower::all()]);
     }
 
     /**
@@ -436,10 +437,12 @@ class LoanController extends Controller
 
     public function schedule($id)
     {
-        $loan_payment = Loan::find($id)->initial_amount;
-        $schedule = LoanSchedule::where('loan_id',$id)->where('status',1)->sum('principal_payment');
-        $outstanding_balance = $loan_payment - $schedule;
+        $loan = Loan::with('payments')->find($id);
+        $loan_payment = $loan->initial_amount;
+        $schedule = array_sum(array_map('floatval', $loan->payments->pluck('payment_amount')->toArray()));
+        $outstanding_balance = number_format($loan->initial_amount - array_sum(array_map('floatval', $loan->payments->pluck('payment_amount')->toArray())),2,',','.');
         $loan = Loan::find($id);
+
         $borrower_name = Borrower::find($loan->borrower_id)->name;
         $legal_loan_id = Loan::find($id)->legal_loan_id;
         // return LoanSchedule::where('loan_id',$id)->get();

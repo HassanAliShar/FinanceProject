@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <title>
-            Login
+            {{ getTitle() }}
         </title>
         <meta name="description" content="Login">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,7 +20,7 @@
         <link id="myskin" rel="stylesheet" media="screen, print" href="css/skins/skin-master.css">
         <!-- Place favicon.ico in the root directory -->
         <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('public/img/'.getLogo()) }}">
         <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
         <link rel="stylesheet" media="screen, print" href="css/fa-brands.css">
         <link rel="stylesheet" media="screen, print" href="{{ asset('css/notifications/toastr/toastr.css') }}">
@@ -152,7 +152,7 @@
                                                 </div>
                                                 @if (Route::has('password.request'))
                                                     <a class="btn btn-link" href="{{ route('password.request') }}">
-                                                        {{-- {{ __('Forgot Your Password?') }} --}}
+                                                        <!--{{ __('Forgot Your Password?') }}-->
                                                     </a>
                                                 @endif
                                             </div>

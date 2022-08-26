@@ -26,6 +26,8 @@
                                 <thead>
                                     <tr>
 
+                                        <th>Borrower Name</th>
+                                        <th>Legal Loan ID</th>
                                         <th>Principal Payment</th>
                                         <th>Interest Payment</th>
                                         <th>Expected Payment</th>
@@ -39,6 +41,8 @@
                                     @foreach ($data as $item)
 
                                         <tr>
+                                            <td>{{ $item->loan->borrower->name }}</td>
+                                            <td>{{ $item->loan->legal_loan_id }}</td>
                                             <td>{{number_format( $item->principal_payment, 2, ',', '.') }}</td>
                                             <td>{{ number_format( $item->interest_payment , 2, ',', '.') }}</td>
                                             <td>{{ number_format( $item->expected_payment , 2, ',', '.') }}</td>

@@ -25,7 +25,8 @@
                             <table class="table table-bordered table-hover table-striped w-100" id="dt-basic-example">
                                 <thead>
                                     <tr>
-
+                                        <th>Borrower Name</th>
+                                        <th>Legal Loan ID</th>
                                         <th>Payment Amount</th>
                                         <th>Interest Amount</th>
                                         <th>Payment Date</th>
@@ -39,6 +40,8 @@
                                     @foreach ($data as $item)
 
                                         <tr>
+                                            <td>{{ $item->loan->borrower->name }}</td>
+                                            <td>{{ $item->loan->legal_loan_id }}</td>
                                             <td>{{ number_format( $item->payment_amount, 2, ',', '.') }}</td>
                                             <td>{{ $item->interest_amount }}</td>
                                             <td>{{date('d-m-Y', strtotime( $item->payment_date )) }}</td>

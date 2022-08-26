@@ -67,4 +67,11 @@ class Loan extends Model
         return $this->initial_amount - $this->payments->sum('payment_amount');
     }
 
+    /**
+     * Get the borrowers that owns the Loan
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+
+
 }

@@ -244,7 +244,7 @@ class LoanApprovelController extends Controller
                         }
                         else{
                             $fileName[$v] = Str::random(30).'.'.$request->file_value[$v]->extension();
-                            $request->file_value[$v]->move(public_path('BorrowerFiles'), $fileName[$v]);
+                            $request->file_value[$v]->move(public_path('LoanFiles'), $fileName[$v]);
                             $files->value = $fileName[$v];
                         }
                         if(!$loan->files()->save($files)){

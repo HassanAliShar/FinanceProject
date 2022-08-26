@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['director'])->group(function(){
         Route::get('/admin_dashboard',function(){
             $today = Carbon::now();
-            // dd(LoanSchedule::with('loan.borrower')->where('expected_payment_date','<',$today)->where('status',0)->get());
+            // dd(LoanSchedule::with('loan')->get());
             return view('director.dashboard',['data'=>LoanSchedule::with('loan')->get(),'late_payment'=>LoanSchedule::with('loan.borrower')->where('expected_payment_date','<',$today->subDays(10))->where('status',0)->get()]);
         })->name('admin.dashboard');
         Route::post('/import_user','LoanController@import_user')->name('import.user');

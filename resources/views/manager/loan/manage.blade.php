@@ -28,7 +28,8 @@
                         <table class="table table-bordered table-hover table-striped w-100" id="dt-basic-example2">
                             <thead>
                                 <tr>
-                                   <th> lender_name</th>
+                                   <th> Borrower Name</th>
+                                   <th>lender_name</th>
                                    <th> legal_loan_id</th>
                                    <th> loan_internal_number</th>
                                    <th> loan_type</th>
@@ -64,6 +65,7 @@
                                 @foreach ($data as $item)
 
                                     <tr>
+                                        <td>{{ $item->borrower->name }}</td>
                                         <td>{{ $item->lender_name }}</td>
                                         <td>{{ $item->legal_loan_id }}</td>
                                         <td>{{ $item->loan_internal_number }}</td>

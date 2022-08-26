@@ -3,7 +3,7 @@
 <div class="container">
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class='subheader-icon fal fa-table'></i> Requested Loan Sechdule
+            <i class='subheader-icon fal fa-table'></i> Requested Loan Schedule
         </h1>
     </div>
     <div class="row">
@@ -25,7 +25,8 @@
                             <table class="table table-bordered table-hover table-striped w-100" id="dt-basic-example">
                                 <thead>
                                     <tr>
-
+                                        <th>Borrower Name</th>
+                                        <th>Legal Loan ID</th>
                                         <th>Principal Payment</th>
                                         <th>Interest Payment</th>
                                         <th>Expected Payment</th>
@@ -39,6 +40,8 @@
                                     @foreach ($data as $item)
 
                                         <tr>
+                                            <td>{{ $item->loan->borrower->name }}</td>
+                                            <td>{{ $item->loan->legal_loan_id }}</td>
                                             <td>{{number_format( $item->principal_payment, 2, ',', '.') }}</td>
                                             <td>{{ number_format( $item->interest_payment , 2, ',', '.') }}</td>
                                             <td>{{ number_format( $item->expected_payment , 2, ',', '.') }}</td>

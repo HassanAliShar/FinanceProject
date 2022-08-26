@@ -21,7 +21,7 @@
     </div>
     <div class="panel-tag mt-5 shadow">
         <div class="row">
-            <div class="col-md-4"><h4> Outstanding Balance: <span class="text-info">{{ number_format($outstanding_balance,2,',','.') }}</span></h4></div>
+            <div class="col-md-4"><h4> Outstanding Balance: <span class="text-info">{{ $outstanding_balance }}</span></h4></div>
             <div class="col-md-4"><h4> Paid Amount: <span class="text-info">{{ number_format($schdule,2,',','.') }}</span></h4></div>
             <div class="col-md-4"><h4> Total Amount: <span class="text-info">{{ number_format($loan_payment,2,',','.') }}</span></h4></div>
         </div>
@@ -58,7 +58,7 @@
                                         </button>
                                     </div>
                                     <div class="col-md-3">
-                                        <a download class="btn btn-success mt-4" href="{{ asset('excel_formates/loan_schdules.xlsx') }}">
+                                        <a download class="btn btn-success mt-4" href="{{ asset('excel_formates/loan_schedules.xlsx') }}">
                                            Sheet Example Format
                                         </a>
                                     </div>
@@ -206,15 +206,15 @@
                                             <td>{{date('d-m-Y', strtotime( $item->payment_date )) }}</td>
                                             <td>{{ $item->payment_note }}</td>
                                             <td>
-                                                {{-- <a href="{{ route('show.mg.payment',$item->id) }}" class="btn btn-sm btn-primary">View</a>
-                                                <a href="{{ route('edit.mg.payment',$item->id) }}" class="btn btn-sm btn-info">Edit</a> --}}
+                                                {{-- <a href="{{ route('show.payment',$item->id) }}" class="btn btn-sm btn-primary">View</a>
+                                                <a href="{{ route('edit.payment',$item->id) }}" class="btn btn-sm btn-info">Edit</a> --}}
                                                 <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#viewPayment_{{ $item->id }}">
                                                     View
                                                 </button>
                                                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#editPayment_{{ $item->id }}">
                                                     Edit
                                                 </button>
-                                                <a href="{{ route('delete.mg.payment',$item->id) }}" class="btn btn-sm btn-danger">Delete</a>
+                                                <a href="{{ route('delete.payment',$item->id) }}" class="btn btn-sm btn-danger">Delete</a>
                                             </td>
                                         </tr>
 

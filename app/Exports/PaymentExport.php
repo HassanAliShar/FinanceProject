@@ -11,10 +11,12 @@ class PaymentExport implements FromCollection, WithHeadings
 {
     public $loan_name;
     public $loan_id;
+    public $id;
 
-    public function __construct($loan_name,$loan_id) {
+    public function __construct($loan_name,$loan_id,$id) {
         $this->loan_name = $loan_name;
         $this->loan_id = $loan_id;
+        $this->id = $id;
     }
     public function headings(): array
     {
@@ -40,6 +42,6 @@ class PaymentExport implements FromCollection, WithHeadings
     */
     public function collection()
     {
-        return LoanPayment::all();
+        return LoanPayment::where('loan_id',$this->id)->get();
     }
 }

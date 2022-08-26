@@ -14,7 +14,7 @@
     </div>
     <div class="panel-tag mt-5 shadow">
         <div class="row">
-            <div class="col-md-4"><h4> Outstanding Balance: <span class="text-info">{{ number_format($outstanding_balance,2,',','.') }}</span></h4></div>
+            <div class="col-md-4"><h4> Outstanding Balance: <span class="text-info">{{ $outstanding_balance }}</span></h4></div>
             <div class="col-md-4"><h4> Paid Amount: <span class="text-info">{{ number_format($schdule,2,',','.') }}</span></h4></div>
             <div class="col-md-4"><h4> Total Amount: <span class="text-info">{{ number_format($loan_payment,2,',','.') }}</span></h4></div>
         </div>
@@ -124,7 +124,7 @@
 
                                         <tr>
                                             <td>{{ number_format( $item->payment_amount, 2, ',', '.') }}</td>
-                                            <td>{{ number_format($item->interest_amount, 2, ',', '.') }}</td>
+                                            <td>{{ $item->interest_amount }}</td>
                                             <td>{{date('d-m-Y', strtotime( $item->payment_date )) }}</td>
                                             <td>{{ $item->payment_note }}</td>
                                             <td>

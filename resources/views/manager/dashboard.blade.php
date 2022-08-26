@@ -23,6 +23,7 @@
                                     <th>Borrower Name</th>
                                     <th>Loan ID</th>
                                     <th>OutStanding Payment</th>
+                                    <th>Initial Amount</th>
                                     <th>Principal Payment</th>
                                     <th>Interest Payment</th>
                                     <th>Expected Payment</th>
@@ -35,7 +36,8 @@
                                     <tr>
                                         <td>{{ $item->loan->borrower->name }}</td>
                                         <td>{{ $item->loan->legal_loan_id }}</td>
-                                        <td>{{ $item->loan->outstanding_payment() }}</td>
+                                        <td>{{ number_format($item->loan->outstanding_payment(),2,',','.') }}</td>
+                                        <td>{{ number_format($item->loan->initial_amount,2,',','.') }}</td>
                                         <td>{{number_format( $item->principal_payment, 2, ',', '.') }}</td>
                                         <td>{{ number_format( $item->interest_payment , 2, ',', '.') }}</td>
                                         <td>{{ number_format( $item->expected_payment , 2, ',', '.') }}</td>

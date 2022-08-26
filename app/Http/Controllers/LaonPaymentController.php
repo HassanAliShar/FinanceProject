@@ -79,7 +79,7 @@ class LaonPaymentController extends Controller
     }
 
     public function requested_payment(){
-        return view('director.loan.payment.requested',['data'=>LoanPaymentApprovel::where('status','Pending')->get()]);
+        return view('director.loan.payment.requested',['data'=>LoanPaymentApprovel::with('loan.borrower')->where('status','Pending')->get()]);
     }
 
     public function approve_request($id){
@@ -170,7 +170,7 @@ class LaonPaymentController extends Controller
     public function export_payment($id){
         try{
             $loan = Loan::find($id);
-            return Excel::download(new PaymentExport($loan->lender_name,$loan->legal_loan_id), 'Payment-'.Carbon::now()->format('d-m-Y').'.xlsx');
+            return Excel::download(new PaymentExport($loan->lender_name,$loan->legal_loan_id,$id), 'Payment-'.Carbon::now()->format('d-m-Y').'.xlsx');
         }catch(Exception $ex){
             return redirect()->back()->with('error',$ex->getMessage());
         }

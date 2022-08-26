@@ -67,7 +67,8 @@ class LaonScheduleController extends Controller
     }
 
     public function requested_schdule(){
-        return view('director.loan.schdule.requested',['data'=>LoanSchduleApprovel::where('status','Pending')->get()]);
+        // dd(LoanSchduleApprovel::with('borrowers')->with('loans')->where('status','Pending')->get());
+        return view('director.loan.schdule.requested',['data'=>LoanSchduleApprovel::with('loan.borrower')->where('status','Pending')->get()]);
     }
 
     public function approve_schdule($id){
@@ -153,9 +154,10 @@ class LaonScheduleController extends Controller
     }
 
     public function staff_manage($id){
-        $loan_payment = Loan::find($id)->initial_amount;
-        $schedule = LoanSchedule::where('loan_id',$id)->where('status',1)->sum('principal_payment');
-        $outstanding_balance = $loan_payment - $schedule;
+        $loan = Loan::with('payments')->find($id);
+        $loan_payment = $loan->initial_amount;
+        $schedule = array_sum(array_map('floatval', $loan->payments->pluck('payment_amount')->toArray()));
+        $outstanding_balance = number_format($loan->initial_amount - array_sum(array_map('floatval', $loan->payments->pluck('payment_amount')->toArray())),2,',','.');
         $loan = Loan::find($id);
         $borrower_name = Borrower::find($loan->borrower_id)->name;
         $legal_loan_id = Loan::find($id)->legal_loan_id;
@@ -191,8 +193,8 @@ class LaonScheduleController extends Controller
     public function export_schdule($id){
         try{
 
-            $loan = Loan::find($id);
-            return Excel::download(new SchduelExport($loan->lender_name,$loan->legal_loan_id), 'Schedule-'.Carbon::now()->format('d-m-Y').'.xlsx');
+            $loan = Loan::with('borrower')->find($id);
+            return Excel::download(new SchduelExport($loan->borrower->name,$loan->legal_loan_id,$id), 'Schedule-'.Carbon::now()->format('d-m-Y').'.xlsx');
 
         }catch(Exception $ex){
             return redirect()->back()->with('error',$ex->getMessage());

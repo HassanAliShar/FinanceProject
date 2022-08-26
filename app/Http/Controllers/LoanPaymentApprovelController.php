@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class LoanPaymentApprovelController extends Controller
 {
     public function index(){
-        return view('manager.loan.payment.requested',['data'=>LoanPaymentApprovel::where('user_id',Auth::user()->id)->get()]);
+        return view('manager.loan.payment.requested',['data'=>LoanPaymentApprovel::with('loan.borrower')->where('user_id',Auth::user()->id)->get()]);
     }
     public function create($id){
         return view('manager.loan.payment.add',['id'=>$id]);
